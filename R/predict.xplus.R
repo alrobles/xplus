@@ -8,7 +8,7 @@
 #'
 #' @return A matrix of probabilities (`type = "response"`) or class labels (`type = "class"`).
 #' @seealso [xplus()], [print.xplus()]
-#' @references Robles et al. (2022). doi:10.1371/journal.pcbi.1009956
+#' @references Zhu et al. (2022). doi:10.1371/journal.pcbi.1009956
 #' @examples
 #' set.seed(1)
 #' x <- matrix(rnorm(100 * 5), ncol = 5)
