@@ -41,9 +41,9 @@ xplus_cv_lognet <- function(predmat, y, type.measure = c("deviance", "class", "a
     good <- matrix(0, nfolds, nlambda)
     for (i in seq(nfolds)) {
       good[i, seq(nlams[i])] <- 1
-      which <- foldid == i
+      fold_mask <- foldid == i
       for (j in seq(nlams[i])) {
-        cvraw[i, j] <- auc_matrix(y[which, ], predmat[which, j], weights[which])
+        cvraw[i, j] <- auc_matrix(y[fold_mask, ], predmat[fold_mask, j], weights[fold_mask])
       }
     }
     N <- apply(good, 2, sum)
