@@ -1,0 +1,35 @@
+---
+title: "Introduction to xplus"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to xplus}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## What is PU learning?
+
+Positive and Unlabeled (PU) learning addresses settings where only positives are labeled,
+and the remaining data are unlabeled (not guaranteed negatives).
+
+## When to use xplus
+
+Use `xplus` when you have confirmed positives, high class imbalance, and sparse high-dimensional features.
+
+## Basic workflow
+
+```{r eval=FALSE}
+library(xplus)
+set.seed(1)
+x <- matrix(rnorm(200 * 10), ncol = 10)
+y <- c(rep(1, 40), rep(0, 160))
+
+fit <- xplus(x, y)
+summary(fit)
+predict(fit, newx = x, type = "response")
+assess(fit, newx = x, newy = y)
+```
