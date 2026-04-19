@@ -7,7 +7,6 @@
 #'
 #' @return A list with raw metric values and metadata.
 #' @seealso [assess()]
-#' @references Robles et al. (2022). doi:10.1371/journal.pcbi.1009956
 #' @examples
 #' y <- factor(c(1, 1, 2, 2))
 #' pred <- matrix(rnorm(4), ncol = 1)
