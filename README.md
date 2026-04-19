@@ -39,4 +39,4 @@ assess(fit, newx = x, newy = y)
 
 ## Reference
 
-Robles et al. (2022), PLoS Computational Biology, doi:10.1371/journal.pcbi.1009956.
+Zhu et al. (2022), PLoS Computational Biology, doi:10.1371/journal.pcbi.1009956.
