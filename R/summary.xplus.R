@@ -13,6 +13,8 @@
 #' fit <- xplus(x, y, max_iter = 5)
 #' summary(fit)
 #' @method summary xplus
+#' @return The input object \code{x} is returned invisibly (called for side
+#' effects).
 #' @export
 summary.xplus <- function(object, ...) {
   n_nonzero <- sum(as.matrix(object$predicted_coefficients) != 0)
@@ -33,9 +35,12 @@ summary.xplus <- function(object, ...) {
   out
 }
 
+#' Print method for summary.xplus objects
 #' @param x A `summary.xplus` object.
 #' @param ... Additional arguments.
 #' @method print summary.xplus
+#' @return The input object \code{x} is returned invisibly (called for side
+#' effects).
 #' @export
 print.summary.xplus <- function(x, ...) {
   cat("Summary of xplus model\n")
