@@ -20,7 +20,7 @@
 #' `convergence_threshold` or the sampling budget is consumed.
 #'
 #' @return An object of class `"xplus"`.
-#' @references Robles et al. (2022). doi:10.1371/journal.pcbi.1009956
+#' @references Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
 #' @seealso [predict.xplus()], [summary.xplus()], [assess.xplus()]
 #' @examples
 #' set.seed(1)
