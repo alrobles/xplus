@@ -1,0 +1,57 @@
+#' Construct a new xplus object
+#'
+#' @param fit_xplus Fitted [glmnet::cv.glmnet()] object.
+#' @param pred_y Predicted probabilities matrix.
+#' @param cutoff Numeric classification cutoff.
+#' @param predicted_coefficients Sparse coefficient matrix.
+#' @param n_iter Number of iterations executed.
+#' @param x Training feature matrix used to fit the model.
+#' @param y Final relabeled response vector.
+#' @param alpha Elastic-net alpha used during fitting.
+#' @param learning_rate Learning rate used during pseudo-label updates.
+#' @param qq Quantile parameter used for cutoff calibration.
+#' @param call Original function call.
+#' @param max_iter Maximum number of iterations configured for fitting.
+#'
+#' @return An object of class `"xplus"`.
+#' @seealso [validate_xplus()]
+#' @examples
+#' \dontrun{
+#' fit <- glmnet::cv.glmnet(matrix(rnorm(50), ncol = 5), c(rep(1, 5), rep(0, 5)), family = "binomial")
+#' obj <- new_xplus(fit_xplus = fit, pred_y = matrix(0.5, 10, 1), cutoff = 0.5)
+#' }
+#' @export
+new_xplus <- function(
+  fit_xplus = list(),
+  pred_y = matrix(),
+  cutoff = numeric(),
+  predicted_coefficients = Matrix::Matrix(),
+  n_iter = integer(),
+  x = matrix(),
+  y = integer(),
+  alpha = numeric(),
+  learning_rate = numeric(),
+  qq = numeric(),
+  call = character(),
+  max_iter = integer()
+) {
+  predicted_coefficients <- Matrix::Matrix(predicted_coefficients, sparse = TRUE)
+
+  structure(
+    list(
+      xplus = fit_xplus,
+      pred_y = pred_y,
+      cutoff = cutoff,
+      predicted_coefficients = predicted_coefficients,
+      n_iter = n_iter,
+      x = x,
+      y = y,
+      alpha = alpha,
+      learning_rate = learning_rate,
+      qq = qq,
+      call = call,
+      max_iter = max_iter
+    ),
+    class = "xplus"
+  )
+}
