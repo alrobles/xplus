@@ -6,7 +6,7 @@
 #'
 #' @return Numeric AUC value.
 #' @seealso [auc_matrix()], [get_auc()]
-#' @references Robles et al. (2022). doi:10.1371/journal.pcbi.1009956
+#' @references Zhu et al. (2022). doi:10.1371/journal.pcbi.1009956
 #' @examples
 #' y <- c(0, 0, 1, 1)
 #' p <- c(0.1, 0.3, 0.7, 0.9)
