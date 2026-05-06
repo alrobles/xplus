@@ -25,7 +25,7 @@ p <- c(0.2, 0.3, 0.7, 0.8)
 auc_matrix(y, p)
 }
 \references{
-Zhu et al. (2022). doi:10.1371/journal.pcbi.1009956
+Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
 }
 \seealso{
 \code{\link[=auc]{auc()}}, \code{\link[=xplus_cv_lognet]{xplus_cv_lognet()}}

@@ -31,7 +31,7 @@ fit <- xplus(x, y, max_iter = 5)
 predict(fit, newx = x, type = "response")
 }
 \references{
-Zhu et al. (2022). doi:10.1371/journal.pcbi.1009956
+Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
 }
 \seealso{
 \code{\link[=xplus]{xplus()}}, \code{\link[=print.xplus]{print.xplus()}}

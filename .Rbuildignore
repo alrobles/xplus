@@ -1,8 +1,8 @@
-^.*\\.Rproj$
-^\\.Rproj\\.user$
-^README\\.md$
-^LICENSE\\.md$
-^_pkgdown\\.yml$
-^\\.github$
-^inst/doc$
+^.*\.Rproj$
 ^\.Rproj\.user$
+^README\.md$
+^LICENSE\.md$
+^_pkgdown\.yml$
+^\.github$
+^data-raw$
+^cran-comments\.md$

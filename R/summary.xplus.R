@@ -13,8 +13,6 @@
 #' fit <- xplus(x, y, max_iter = 5)
 #' summary(fit)
 #' @method summary xplus
-#' @return The input object \code{x} is returned invisibly (called for side
-#' effects).
 #' @export
 summary.xplus <- function(object, ...) {
   n_nonzero <- sum(as.matrix(object$predicted_coefficients) != 0)

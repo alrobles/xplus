@@ -30,7 +30,7 @@ fit <- xplus(x, y, max_iter = 5)
 get_predictions(fit, x, y)
 }
 \references{
-Zhu et al. (2022). doi:10.1371/journal.pcbi.1009956
+Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
 }
 \seealso{
 \code{\link[=predict.xplus]{predict.xplus()}}, \code{\link[=assess]{assess()}}

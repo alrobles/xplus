@@ -14,6 +14,6 @@ predicted_y_example
 Predicted probabilities from an xplus model.
 }
 \references{
-Robles et al. (2022). doi:10.1371/journal.pcbi.1009956
+Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
 }
 \keyword{datasets}

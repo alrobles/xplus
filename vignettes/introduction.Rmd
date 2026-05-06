@@ -22,14 +22,20 @@ Use `xplus` when you have confirmed positives, high class imbalance, and sparse 
 
 ## Basic workflow
 
-```{r eval=FALSE}
+```{r basic-workflow}
 library(xplus)
 set.seed(1)
 x <- matrix(rnorm(200 * 10), ncol = 10)
 y <- c(rep(1, 40), rep(0, 160))
 
-fit <- xplus(x, y)
+fit <- xplus(x, y, max_iter = 20)
 summary(fit)
-predict(fit, newx = x, type = "response")
-assess(fit, newx = x, newy = y)
+head(predict(fit, newx = x, type = "response"))
+```
+
+## Model assessment
+
+```{r assessment}
+metrics <- assess(fit, newx = x, newy = y)
+metrics$auc
 ```
