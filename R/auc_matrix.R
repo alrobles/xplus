@@ -6,7 +6,7 @@
 #'
 #' @return Numeric AUC value.
 #' @seealso [auc()], [xplus_cv_lognet()]
-#' @references Zhu et al. (2022). doi:10.1371/journal.pcbi.1009956
+#' @references Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
 #' @examples
 #' y <- cbind(c(1, 1, 0, 0), c(0, 0, 1, 1))
 #' p <- c(0.2, 0.3, 0.7, 0.8)

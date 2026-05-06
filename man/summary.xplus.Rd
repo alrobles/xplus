@@ -13,9 +13,6 @@
 }
 \value{
 A list of class \code{summary.xplus} with model details.
-
-The input object \code{x} is returned invisibly (called for side
-effects).
 }
 \description{
 Summarize an xplus model
