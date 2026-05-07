@@ -4,7 +4,7 @@
 #'
 #' @param x Numeric feature matrix.
 #' @param y Binary vector where `1` indicates known positives and `0` indicates unlabeled samples.
-#' @param alpha Elastic-net mixing parameter passed to [glmnet::cv.glmnet()].
+#' @param alpha Elastic-net mixing parameter passed to [glmnet::cv.glmnet()]; must be in `[0, 1]`.
 #' @param sample_use_time Number of times each unlabeled sample can be selected before its sampling probability reaches zero.
 #' @param learning_rate Learning-rate for pseudo-label updates in `[0, 1]`.
 #' @param qq Quantile used to define the positive-reference cutoff.
@@ -48,7 +48,7 @@ xplus <- function(
   if (!is.matrix(x)) stop("`x` must be a matrix.", call. = FALSE)
   if (nrow(x) != length(y)) stop("`x` and `y` must have matching dimensions.", call. = FALSE)
   if (!all(y %in% c(0, 1))) stop("`y` must contain only 0 and 1.", call. = FALSE)
-  if (!is.numeric(alpha) || length(alpha) != 1) stop("`alpha` must be a scalar numeric value.", call. = FALSE)
+  if (!is.numeric(alpha) || length(alpha) != 1 || alpha < 0 || alpha > 1) stop("`alpha` must be a numeric scalar in [0, 1].", call. = FALSE)
   if (!is.numeric(sample_use_time) || sample_use_time <= 0) stop("`sample_use_time` must be > 0.", call. = FALSE)
   if (!is.numeric(learning_rate) || learning_rate < 0 || learning_rate > 1) stop("`learning_rate` must be in [0, 1].", call. = FALSE)
   if (!is.numeric(qq) || qq < 0 || qq > 1) stop("`qq` must be in [0, 1].", call. = FALSE)
