@@ -6,8 +6,8 @@
 #' @param s Penalty value name (`"lambda.min"`, `"lambda.1se"`) or numeric lambda.
 #' @param type Prediction type: `"response"`, `"link"`, or `"class"`.
 #'
-#' @return A matrix of probabilities (`type = "response"`), log-odds (`type = "link"`),
-#'   or class labels (`type = "class"`).
+#' @return A matrix of probabilities (`type = "response"`), log-odds linear
+#'   predictors (`type = "link"`), or class labels (`type = "class"`).
 #' @seealso [xplus()], [print.xplus()]
 #' @references Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
 #' @examples

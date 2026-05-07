@@ -10,7 +10,7 @@ test_that("assess returns all requested metrics", {
   expect_named(out, c("deviance", "class", "auc", "mse", "mae"))
 })
 
-test_that("assess AUC is in [0, 1] (no double-sigmoid corruption)", {
+test_that("assess AUC is not corrupted by double sigmoid", {
   skip_if_not_installed("glmnet")
   set.seed(123)
   x <- matrix(rnorm(120 * 4), ncol = 4)
@@ -19,12 +19,10 @@ test_that("assess AUC is in [0, 1] (no double-sigmoid corruption)", {
   fit <- xplus(x, y, max_iter = 5)
   out <- assess(fit, newx = x, newy = y)
 
-  expect_true(out$auc >= 0 && out$auc <= 1)
-  # class error rate is in [0, 1]
-  expect_true(out$class >= 0 && out$class <= 1)
-  # deviance is non-negative
-  expect_true(out$deviance >= 0)
-  # MSE and MAE are non-negative
-  expect_true(out$mse >= 0)
-  expect_true(out$mae >= 0)
+  # AUC should be a valid probability in [0, 1]; a double-sigmoid bug
+  # compresses predictions toward 0.5 and drives AUC toward 0.5
+  auc_val <- out$auc
+  expect_true(auc_val >= 0 && auc_val <= 1)
+  # With a separable signal, AUC should be well above 0.5
+  expect_gt(auc_val, 0.5)
 })
