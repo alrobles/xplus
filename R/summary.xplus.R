@@ -27,7 +27,7 @@ summary.xplus <- function(object, ...) {
     lambda_min = object$xplus$lambda.min,
     lambda_1se = object$xplus$lambda.1se,
     n_nonzero_coefficients = n_nonzero,
-    convergence_reached = object$n_iter < object$max_iter
+    stop_reason = object$stop_reason
   )
   class(out) <- "summary.xplus"
   out
@@ -45,7 +45,7 @@ print.summary.xplus <- function(x, ...) {
   cat("Observations:", x$n_obs, "\n")
   cat("Features:", x$n_features, "\n")
   cat("Iterations:", x$n_iter, "\n")
-  cat("Converged:", x$convergence_reached, "\n")
+  cat("Stop reason:", x$stop_reason, "\n")
   cat("Cutoff:", x$cutoff, "\n")
   cat("lambda.min:", x$lambda_min, "\n")
   cat("lambda.1se:", x$lambda_1se, "\n")
