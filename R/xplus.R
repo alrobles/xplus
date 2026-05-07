@@ -69,7 +69,7 @@ xplus <- function(
   pseudo_labels <- y
   prob_chosen <- rep(1, length(unlabeled_id))
   names(prob_chosen) <- unlabeled_id
-  change_proportion <- rep(0, 5)
+  change_proportion <- rep(NA_real_, 5)
   n_iter <- 0
 
   for (i in seq_len(max_iter)) {
@@ -120,7 +120,7 @@ xplus <- function(
       break
     }
 
-    if (mean(change_proportion) > convergence_threshold) {
+    if (mean(change_proportion, na.rm = TRUE) > convergence_threshold) {
       if (isTRUE(verbose)) message("Stopping: label stability reached.")
       break
     }
