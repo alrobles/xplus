@@ -107,6 +107,10 @@ xplus <- function(
     label_sample_id_new <- y[sample_id]
 
     prob_chosen[prob_chosen <= 0] <- 0
+    if (all(prob_chosen <= 0)) {
+      if (isTRUE(verbose)) message("Stopping: all sampling probabilities exhausted.")
+      break
+    }
     unchanged <- sum(label_sample_id_old == label_sample_id_new) / length(sample_id)
     change_proportion <- c(change_proportion[-1], unchanged)
     n_iter <- i
