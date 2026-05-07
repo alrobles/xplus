@@ -22,8 +22,8 @@ test_that("assess uses linear predictor scale for xplus_cv_lognet metrics", {
   measures <- c("deviance", "class", "auc", "mse", "mae")
 
   expected <- lapply(measures, function(measure) {
-    teststuff <- xplus_cv_lognet(pred_link, y, measure)
-    drop(with(teststuff, apply(cvraw, 2, stats::weighted.mean, w = rep(1, length(y)), na.rm = TRUE)))
+    metric_result <- xplus_cv_lognet(pred_link, y, measure)
+    drop(with(metric_result, apply(cvraw, 2, stats::weighted.mean, w = rep(1, length(y)), na.rm = TRUE)))
   })
   names(expected) <- measures
 
