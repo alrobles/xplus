@@ -7,11 +7,7 @@
 #'
 #' @return A list with raw metric values and metadata.
 #' @seealso [assess()]
-#' @examples
-#' y <- factor(c(1, 1, 2, 2))
-#' pred <- matrix(rnorm(4), ncol = 1)
-#' xplus_cv_lognet(pred, y, type.measure = "class")
-#' @export
+#' @noRd
 xplus_cv_lognet <- function(predmat, y, type.measure = c("deviance", "class", "auc", "mse", "mae"), weights = NULL) {
   nc <- dim(y)
   if (is.null(nc)) {
