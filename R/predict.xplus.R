@@ -4,10 +4,10 @@
 #' @param ... Additional arguments (unused).
 #' @param newx Optional new feature matrix.
 #' @param s Penalty value name (`"lambda.min"`, `"lambda.1se"`) or numeric lambda.
-#' @param type Prediction type: `"response"`, `"class"`, or `"link"`.
+#' @param type Prediction type: `"response"`, `"link"`, or `"class"`.
 #'
-#' @return A matrix of probabilities (`type = "response"`), class labels (`type = "class"`),
-#' or linear predictors (`type = "link"`).
+#' @return A matrix of probabilities (`type = "response"`), log-odds (`type = "link"`),
+#'   or class labels (`type = "class"`).
 #' @seealso [xplus()], [print.xplus()]
 #' @references Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
 #' @examples
@@ -16,10 +16,11 @@
 #' y <- c(rep(1, 20), rep(0, 80))
 #' fit <- xplus(x, y, max_iter = 5)
 #' predict(fit, newx = x, type = "response")
+#' predict(fit, newx = x, type = "link")
 #' @method predict xplus
 #' @export
 predict.xplus <- function(object, ..., newx = NULL, s = "lambda.min", type = "response") {
-  type <- match.arg(type, c("response", "class", "link"))
+  type <- match.arg(type, c("response", "link", "class"))
 
   if (is.numeric(s)) {
     lambda <- s
@@ -33,9 +34,12 @@ predict.xplus <- function(object, ..., newx = NULL, s = "lambda.min", type = "re
 
   if (type == "link") {
     if (is.null(newx)) {
-      newx <- object$x
+      prob <- object$pred_y
+      prob <- pmin(pmax(prob, 1e-15), 1 - 1e-15)
+      return(log(prob / (1 - prob)))
+    } else {
+      return(stats::predict(object$xplus$glmnet.fit, newx, s = lambda, type = "link"))
     }
-    return(stats::predict(object$xplus$glmnet.fit, newx, s = lambda, type = "link"))
   }
 
   if (is.null(newx)) {
