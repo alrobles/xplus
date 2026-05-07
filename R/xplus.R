@@ -12,6 +12,7 @@
 #' @param nfolds Number of CV folds used in the iterative fit.
 #' @param max_iter Maximum number of pseudo-labeling iterations.
 #' @param convergence_threshold Proportion threshold for label stability and sampling exhaustion checks.
+#' @param seed Integer seed passed to [set.seed()] for reproducibility. When `NULL` (default), no seed is set.
 #'
 #' @details
 #' The PLUS algorithm alternates between fitting penalized logistic models on known positives
@@ -25,10 +26,9 @@
 #' @importFrom stats predict
 #' @examples
 #' \donttest{
-#' set.seed(1)
 #' x <- matrix(rnorm(200 * 10), ncol = 10)
 #' y <- c(rep(1, 40), rep(0, 160))
-#' fit <- xplus(x, y, max_iter = 20)
+#' fit <- xplus(x, y, max_iter = 20, seed = 1)
 #' }
 #' @export
 xplus <- function(
@@ -41,9 +41,15 @@ xplus <- function(
   verbose = FALSE,
   nfolds = 4,
   max_iter = 10000,
-  convergence_threshold = 0.9
+  convergence_threshold = 0.9,
+  seed = NULL
 ) {
   this.call <- match.call()
+
+  if (!is.null(seed) && (!is.numeric(seed) || length(seed) != 1)) {
+    stop("`seed` must be a single numeric value or NULL.", call. = FALSE)
+  }
+  if (!is.null(seed)) set.seed(as.integer(seed))
 
   if (!is.matrix(x)) stop("`x` must be a matrix.", call. = FALSE)
   if (nrow(x) != length(y)) stop("`x` and `y` must have matching dimensions.", call. = FALSE)
