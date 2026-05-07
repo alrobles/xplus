@@ -43,3 +43,44 @@ test_that("xplus can stop on early label stability", {
 
   expect_equal(fit$n_iter, 1)
 })
+
+test_that("final refit passes alpha = 0 (ridge) to cv.glmnet", {
+  skip_if_not_installed("glmnet")
+  set.seed(42)
+  x <- matrix(rnorm(100 * 5), ncol = 5)
+  y <- c(rep(1, 25), rep(0, 75))
+
+  fit <- xplus(x, y, alpha = 0, max_iter = 2, seed = 42)
+
+  expect_equal(fit$alpha, 0)
+  # Ridge (alpha=0) never produces exact zeros; all non-intercept coefs should be non-zero
+  coefs <- as.numeric(coef(fit))[-1]
+  expect_true(all(coefs != 0))
+})
+
+test_that("final refit passes alpha = 1 (lasso) to cv.glmnet", {
+  skip_if_not_installed("glmnet")
+  set.seed(42)
+  x <- matrix(rnorm(100 * 5), ncol = 5)
+  y <- c(rep(1, 25), rep(0, 75))
+
+  fit <- xplus(x, y, alpha = 1, max_iter = 2, seed = 42)
+
+  expect_equal(fit$alpha, 1)
+  # Lasso (alpha=1) should produce a sparse solution (at least one zero coef)
+  coefs <- as.numeric(coef(fit))[-1]
+  expect_true(any(coefs == 0))
+})
+
+test_that("final refit alpha is stored and consistent for alpha = 0.5", {
+  skip_if_not_installed("glmnet")
+  set.seed(42)
+  x <- matrix(rnorm(100 * 5), ncol = 5)
+  y <- c(rep(1, 25), rep(0, 75))
+
+  fit <- xplus(x, y, alpha = 0.5, max_iter = 2, seed = 42)
+
+  expect_equal(fit$alpha, 0.5)
+  expect_s3_class(fit, "xplus")
+  expect_true(inherits(fit$xplus, "cv.glmnet"))
+})

@@ -139,7 +139,16 @@ xplus <- function(
     }
   }
 
-  fit_pi <- glmnet::cv.glmnet(x, y, family = "binomial")
+  fit_pi <- glmnet::cv.glmnet(
+    x = x,
+    y = y,
+    alpha = alpha,
+    type.measure = "auc",
+    nfolds = nfolds,
+    thresh = 1e-3,
+    maxit = 1e3,
+    family = "binomial"
+  )
   pred_y <- stats::predict(fit_pi, newx = x, s = "lambda.min", type = "response")
   cutoff <- stats::quantile(pred_y[positive_id], qq)
   pred_coef1 <- glmnet::coef.glmnet(fit_pi, s = "lambda.min")
