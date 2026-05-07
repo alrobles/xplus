@@ -24,7 +24,7 @@ assess <- function(object, newx = NULL, newy, weights = NULL, ...) {
 #' @method assess xplus
 #' @export
 assess.xplus <- function(object, newx = NULL, newy, weights = NULL, ...) {
-  predmat <- predict(object, newx = newx, ...)
+  predmat <- predict(object, newx = newx, type = "link", ...)
   fam <- "binomial"
   attr(predmat, "family") <- fam
   type.measures <- c("deviance", "class", "auc", "mse", "mae")

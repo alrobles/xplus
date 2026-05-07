@@ -21,5 +21,10 @@ validate_xplus <- function(xplus_object) {
   stopifnot(is.matrix(values$x))
   stopifnot(length(values$y) == nrow(values$x))
   stopifnot(is.numeric(values$max_iter), length(values$max_iter) == 1)
+  stopifnot(
+    is.character(values$stop_reason),
+    length(values$stop_reason) == 1,
+    values$stop_reason %in% c("max_iter", "label_stability", "budget_exhausted")
+  )
   xplus_object
 }
