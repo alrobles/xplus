@@ -17,7 +17,7 @@ auc_matrix <- function(y, prob, weights) {
   Y <- rep(c(0, 1), c(ny, ny))
   Prob <- c(prob, prob)
   if (missing(weights)) {
-    auc(y = Y, prob = Prob)
+    auc(y = Y, prob = Prob, w = as.vector(y))
   } else {
     Weights <- as.vector(weights * y)
     auc(y = Y, prob = Prob, w = Weights)
