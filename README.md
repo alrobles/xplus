@@ -2,7 +2,7 @@
 
 [![R-CMD-check](https://github.com/alrobles/xplus/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/alrobles/xplus/actions/workflows/R-CMD-check.yaml)
 
-`xplus` implements the PLUS algorithm: **Positive and Unlabeled Learning from Unbalanced cases and Sparse structures**.
+`xplus` implements the PLUS algorithm: **Positive and Unlabeled Learning from Unbalanced clases and Sparse structures**.
 
 ## Installation
 
