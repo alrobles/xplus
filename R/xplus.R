@@ -4,7 +4,7 @@
 #'
 #' @param x Numeric feature matrix.
 #' @param y Binary vector where `1` indicates known positives and `0` indicates unlabeled samples.
-#' @param alpha Elastic-net mixing parameter passed to [glmnet::cv.glmnet()].
+#' @param alpha Elastic-net mixing parameter passed to [glmnet::cv.glmnet()]; must be in `[0, 1]`.
 #' @param sample_use_time Number of times each unlabeled sample can be selected before its sampling probability reaches zero.
 #' @param learning_rate Learning-rate for pseudo-label updates in `[0, 1]`.
 #' @param qq Quantile used to define the positive-reference cutoff.
@@ -12,6 +12,7 @@
 #' @param nfolds Number of CV folds used in the iterative fit.
 #' @param max_iter Maximum number of pseudo-labeling iterations.
 #' @param convergence_threshold Proportion threshold for label stability and sampling exhaustion checks.
+#' @param seed Integer seed passed to [set.seed()] for reproducibility. When `NULL` (default), no seed is set.
 #'
 #' @details
 #' The PLUS algorithm alternates between fitting penalized logistic models on known positives
@@ -25,10 +26,9 @@
 #' @importFrom stats predict
 #' @examples
 #' \donttest{
-#' set.seed(1)
 #' x <- matrix(rnorm(200 * 10), ncol = 10)
 #' y <- c(rep(1, 40), rep(0, 160))
-#' fit <- xplus(x, y, max_iter = 20)
+#' fit <- xplus(x, y, max_iter = 20, seed = 1)
 #' }
 #' @export
 xplus <- function(
@@ -41,14 +41,20 @@ xplus <- function(
   verbose = FALSE,
   nfolds = 4,
   max_iter = 10000,
-  convergence_threshold = 0.9
+  convergence_threshold = 0.9,
+  seed = NULL
 ) {
   this.call <- match.call()
+
+  if (!is.null(seed) && (!is.numeric(seed) || length(seed) != 1)) {
+    stop("`seed` must be a single numeric value or NULL.", call. = FALSE)
+  }
+  if (!is.null(seed)) set.seed(as.integer(seed))
 
   if (!is.matrix(x)) stop("`x` must be a matrix.", call. = FALSE)
   if (nrow(x) != length(y)) stop("`x` and `y` must have matching dimensions.", call. = FALSE)
   if (!all(y %in% c(0, 1))) stop("`y` must contain only 0 and 1.", call. = FALSE)
-  if (!is.numeric(alpha) || length(alpha) != 1) stop("`alpha` must be a scalar numeric value.", call. = FALSE)
+  if (!is.numeric(alpha) || length(alpha) != 1 || alpha < 0 || alpha > 1) stop("`alpha` must be a numeric scalar in [0, 1].", call. = FALSE)
   if (!is.numeric(sample_use_time) || sample_use_time <= 0) stop("`sample_use_time` must be > 0.", call. = FALSE)
   if (!is.numeric(learning_rate) || learning_rate < 0 || learning_rate > 1) stop("`learning_rate` must be in [0, 1].", call. = FALSE)
   if (!is.numeric(qq) || qq < 0 || qq > 1) stop("`qq` must be in [0, 1].", call. = FALSE)
@@ -107,6 +113,10 @@ xplus <- function(
     label_sample_id_new <- y[sample_id]
 
     prob_chosen[prob_chosen <= 0] <- 0
+    if (all(prob_chosen <= 0)) {
+      if (isTRUE(verbose)) message("Stopping: all sampling probabilities exhausted.")
+      break
+    }
     unchanged <- sum(label_sample_id_old == label_sample_id_new) / length(sample_id)
     change_proportion <- c(change_proportion[-1], unchanged)
     n_iter <- i
