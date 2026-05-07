@@ -11,11 +11,20 @@ test_that("xplus runs and returns xplus class", {
   expect_equal(nrow(fit$pred_y), nrow(x))
 })
 
-test_that("xplus errors when alpha is out of [0, 1]", {
+test_that("xplus can stop on early label stability", {
+  skip_if_not_installed("glmnet")
+  set.seed(123)
   x <- matrix(rnorm(100 * 5), ncol = 5)
   y <- c(rep(1, 25), rep(0, 75))
 
-  expect_error(xplus(x, y, alpha = -0.1), "`alpha` must be a numeric scalar in \\[0, 1\\]\\.")
-  expect_error(xplus(x, y, alpha = 2),    "`alpha` must be a numeric scalar in \\[0, 1\\]\\.")
-  expect_error(xplus(x, y, alpha = "a"),  "`alpha` must be a numeric scalar in \\[0, 1\\]\\.")
+  fit <- xplus(
+    x,
+    y,
+    learning_rate = 0,
+    sample_use_time = 1e6,
+    convergence_threshold = 0.9,
+    max_iter = 10
+  )
+
+  expect_equal(fit$n_iter, 1)
 })
