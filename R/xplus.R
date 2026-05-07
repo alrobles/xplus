@@ -71,6 +71,7 @@ xplus <- function(
   names(prob_chosen) <- unlabeled_id
   change_proportion <- rep(0, 5)
   n_iter <- 0
+  stop_reason <- "max_iter"
 
   for (i in seq_len(max_iter)) {
     sample_id <- sample(unlabeled_id, length(positive_id), replace = TRUE, prob = prob_chosen)
@@ -117,11 +118,13 @@ xplus <- function(
 
     if (sum(prob_chosen <= 0.01) > (convergence_threshold * length(prob_chosen))) {
       if (isTRUE(verbose)) message("Stopping: sampling budget exhausted.")
+      stop_reason <- "budget_exhausted"
       break
     }
 
     if (mean(change_proportion) > convergence_threshold) {
       if (isTRUE(verbose)) message("Stopping: label stability reached.")
+      stop_reason <- "label_stability"
       break
     }
   }
@@ -143,6 +146,7 @@ xplus <- function(
     learning_rate = learning_rate,
     qq = qq,
     max_iter = max_iter,
+    stop_reason = stop_reason,
     call = this.call
   )
 

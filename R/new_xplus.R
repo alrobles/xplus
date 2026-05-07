@@ -12,6 +12,7 @@
 #' @param qq Quantile parameter used for cutoff calibration.
 #' @param call Original function call.
 #' @param max_iter Maximum number of iterations configured for fitting.
+#' @param stop_reason Reason fitting stopped: `"max_iter"`, `"label_stability"`, or `"budget_exhausted"`.
 #'
 #' @return An object of class `"xplus"`.
 #' @seealso [validate_xplus()]
@@ -33,7 +34,8 @@ new_xplus <- function(
   learning_rate = numeric(),
   qq = numeric(),
   call = character(),
-  max_iter = integer()
+  max_iter = integer(),
+  stop_reason = character()
 ) {
   predicted_coefficients <- Matrix::Matrix(predicted_coefficients, sparse = TRUE)
 
@@ -50,7 +52,8 @@ new_xplus <- function(
       learning_rate = learning_rate,
       qq = qq,
       call = call,
-      max_iter = max_iter
+      max_iter = max_iter,
+      stop_reason = stop_reason
     ),
     class = "xplus"
   )
