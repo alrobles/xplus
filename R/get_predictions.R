@@ -24,9 +24,10 @@ get_predictions <- function(object, newx, newy, use_cutoff = TRUE) {
     predicted <- ifelse(predicted == 1, "Class1", "Class2") |> as.factor()
     class1 <- predict(object, newx = newx, s = "lambda.min", type = "response") |> as.numeric()
   } else {
-    predicted <- predict(object$xplus, newx = newx, type = "class") |> as.factor()
-    predicted <- ifelse(predicted == 1, "Class1", "Class2") |> as.factor()
-    class1 <- predict(object$xplus, newx = newx, type = "response") |> as.numeric()
+    predicted_raw <- predict(object$xplus, newx = newx, s = "lambda.min", type = "class")
+    predicted <- ifelse(as.vector(predicted_raw) == "1", "Class1", "Class2") |> as.factor()
+    class1 <- predict(object$xplus, newx = newx, s = "lambda.min", type = "response") |>
+      as.vector() |> as.numeric()
   }
 
   class2 <- 1 - class1
