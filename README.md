@@ -62,6 +62,23 @@ The script writes:
 
 Metrics include AUC, class error, coefficient support/sparsity, convergence iterations, runtime, and stability under fixed seeds.
 
+## Migration/default decision for `current` vs `continuous_enhancement`
+
+Decision: keep `continuous_enhancement` as **opt-in** for now (`learning_rate < 1`) and keep `current` as the default (`learning_rate = 1`).
+
+Validation evidence used for this decision:
+
+- **Predictive quality**: benchmark outputs (`path_comparison_runs.csv` / `path_comparison_summary.csv`) include AUC and class error for both paths, but current validation does not yet show a consistent, broad win that justifies changing defaults.
+- **Stability**: fixed-seed benchmark tests verify deterministic decision metrics and support sets under repeated runs (`tests/testthat/test-benchmark-harness.R`).
+- **Runtime**: benchmark outputs track runtime per path; continuous enhancement updates all unlabeled points per iteration, so runtime trade-offs are expected and should remain user-controlled.
+- **Compatibility**: default behavior and public interfaces remain unchanged when `learning_rate = 1`, so existing users are not forced onto new iterative semantics.
+
+Migration and release guidance:
+
+- **Current release line**: no migration required for existing users.
+- **Opt-in path**: users who want continuous enhancement can enable it by setting `learning_rate < 1` (and tune `sample_use_time` as needed).
+- **Future default change gate**: consider making continuous enhancement the default only after benchmark summaries across representative datasets show stable quality gains without unacceptable runtime regressions.
+
 ## Reference
 
 Zhou et al. (2022), PLoS Computational Biology, doi:10.1371/journal.pcbi.1009956.
