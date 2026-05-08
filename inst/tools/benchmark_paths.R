@@ -4,7 +4,7 @@ default_path_specs <- function(
   max_iter = 30,
   nfolds = 4,
   enhanced_learning_rate = 0.5,
-  enhanced_sample_use_time = 60
+  enhanced_sample_use_budget = 60
 ) {
   list(
     current = list(
@@ -17,7 +17,7 @@ default_path_specs <- function(
         max_iter = max_iter,
         nfolds = nfolds,
         learning_rate = enhanced_learning_rate,
-        sample_use_time = enhanced_sample_use_time
+        sample_use_time = enhanced_sample_use_budget
       )
     )
   )
@@ -37,7 +37,7 @@ extract_support <- function(fit) {
 }
 
 calculate_sparsity <- function(support_size, n_features) {
-  if (n_features <= 0) {
+  if (n_features <= 0 || support_size < 0 || support_size > n_features) {
     return(NA_real_)
   }
   1 - (support_size / n_features)
@@ -175,7 +175,8 @@ write_markdown_table <- function(summary_df, seeds, output_file) {
     "Stability under fixed seeds is summarized by AUC/class error standard deviations and support_jaccard_mean."
   )
 
-  # Keep byte-level write behavior stable across locales/viewers.
+  # useBytes=TRUE keeps the markdown table encoding stable for non-ASCII content (e.g. "+/-")
+  # across locales and platforms.
   writeLines(lines, con = output_file, useBytes = TRUE)
 }
 
