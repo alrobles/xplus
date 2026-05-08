@@ -39,7 +39,9 @@ test_that("assess class metric matches manual and predict type='class' threshold
   y <- c(0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0)
 
   pred_prob <- predict(fit, type = "response")
+  # With cutoff = 0.5, values > 0.5 map to class 1 and <= 0.5 to class 0.
   manual_class <- as.integer(pred_prob > fit$cutoff)
+  # predict(type = "class") returns factor(FALSE, TRUE); convert to 0/1.
   pred_class <- as.integer(predict(fit, type = "class")) - 1
   manual_error <- mean(manual_class != y)
 
