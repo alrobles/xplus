@@ -6,7 +6,7 @@
 #' @param predicted_coefficients Sparse coefficient matrix.
 #' @param n_iter Number of iterations executed.
 #' @param x Training feature matrix used to fit the model.
-#' @param y Final relabeled response vector.
+#' @param y Final pseudo-label state used for final fitting.
 #' @param alpha Elastic-net alpha used during fitting.
 #' @param learning_rate Learning rate used during pseudo-label updates.
 #' @param pseudo_labels Final pseudo-label probabilities.
@@ -31,7 +31,7 @@ new_xplus <- function(
   predicted_coefficients = Matrix::Matrix(),
   n_iter = integer(),
   x = matrix(),
-  y = integer(),
+  y = numeric(),
   alpha = numeric(),
   learning_rate = numeric(),
   pseudo_labels = numeric(),
