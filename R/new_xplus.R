@@ -38,6 +38,7 @@ new_xplus <- function(
   stop_reason = character()
 ) {
   predicted_coefficients <- Matrix::Matrix(predicted_coefficients, sparse = TRUE)
+  stop_reason <- as.character(stop_reason)[1]
 
   structure(
     list(
