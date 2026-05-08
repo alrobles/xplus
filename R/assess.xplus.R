@@ -7,6 +7,8 @@
 #' @param ... Additional arguments passed to [predict()].
 #'
 #' @return A named list with `deviance`, `class`, `auc`, `mse`, and `mae`.
+#'   For `class` metric, the threshold used is the model's cutoff (from
+#'   `object$cutoff`), consistent with `predict(type = "class")`.
 #' @seealso [xplus()], [get_auc()]
 #' @references Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
 #' @examples
@@ -40,7 +42,7 @@ assess.xplus <- function(object, newx = NULL, newy, weights = NULL, ...) {
   names(outlist) <- type.measures
 
   for (measure in type.measures) {
-    teststuff <- do.call(xplus_cv_lognet, list(predmat, y, measure))
+    teststuff <- do.call(xplus_cv_lognet, list(predmat, y, measure, weights, object$cutoff))
     out <- drop(with(teststuff, apply(cvraw, 2, stats::weighted.mean, w = weights, na.rm = TRUE)))
     attr(out, "measure") <- measure
     outlist[[measure]] <- out

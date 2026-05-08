@@ -4,11 +4,12 @@
 #' @param y Outcome values.
 #' @param type.measure Metric type.
 #' @param weights Optional sample weights.
+#' @param cutoff Optional cutoff threshold for class metric (defaults to 0.5).
 #'
 #' @return A list with raw metric values and metadata.
 #' @seealso [assess()]
 #' @noRd
-xplus_cv_lognet <- function(predmat, y, type.measure = c("deviance", "class", "auc", "mse", "mae"), weights = NULL) {
+xplus_cv_lognet <- function(predmat, y, type.measure = c("deviance", "class", "auc", "mse", "mae"), weights = NULL, cutoff = 0.5) {
   nc <- dim(y)
   if (is.null(nc)) {
     y <- as.factor(y)
@@ -60,7 +61,7 @@ xplus_cv_lognet <- function(predmat, y, type.measure = c("deviance", "class", "a
         ly <- drop((y * ly) %*% c(1, 1))
         2 * (ly - lp)
       },
-      class = y[, 1] * (predmat > 0.5) + y[, 2] * (predmat <= 0.5)
+      class = y[, 1] * (predmat > cutoff) + y[, 2] * (predmat <= cutoff)
     )
   }
   list(cvraw = cvraw, weights = weights, N = N, type.measure = type.measure)
