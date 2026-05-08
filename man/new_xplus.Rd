@@ -11,7 +11,7 @@ new_xplus(
   predicted_coefficients = Matrix::Matrix(),
   n_iter = integer(),
   x = matrix(),
-  y = integer(),
+  y = numeric(),
   alpha = numeric(),
   learning_rate = numeric(),
   qq = numeric(),
@@ -33,7 +33,7 @@ new_xplus(
 
 \item{x}{Training feature matrix used to fit the model.}
 
-\item{y}{Final relabeled response vector.}
+\item{y}{Final pseudo-label state used for final fitting.}
 
 \item{alpha}{Elastic-net alpha used during fitting.}
 

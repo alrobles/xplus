@@ -160,7 +160,7 @@ xplus <- function(
     }
   }
 
-  fit_pi <- glmnet::cv.glmnet(x, y, family = "binomial", alpha = alpha, nfolds = nfolds)
+  fit_pi <- glmnet::cv.glmnet(x, pseudo_labels, family = "binomial", alpha = alpha, nfolds = nfolds)
   pred_y <- stats::predict(fit_pi, newx = x, s = "lambda.min", type = "response")
   cutoff <- stats::quantile(pred_y[positive_id], qq)
   pred_coef1 <- glmnet::coef.glmnet(fit_pi, s = "lambda.min")
@@ -172,7 +172,7 @@ xplus <- function(
     predicted_coefficients = pred_coef1,
     n_iter = n_iter,
     x = x,
-    y = y,
+    y = pseudo_labels,
     alpha = alpha,
     learning_rate = learning_rate,
     qq = qq,

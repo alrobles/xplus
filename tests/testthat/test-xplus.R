@@ -172,3 +172,26 @@ test_that("xplus handles near-degenerate negative threshold", {
   fit <- xplus(x, y, max_iter = 1, seed = 456)
   expect_s3_class(fit, "xplus")
 })
+
+test_that("final fit uses stabilized continuous pseudo-labels with unchanged interfaces", {
+  skip_if_not_installed("glmnet")
+  set.seed(999)
+  x <- matrix(rnorm(120 * 4), ncol = 4)
+  y <- c(rep(1, 30), rep(0, 90))
+
+  fit <- xplus(x, y, learning_rate = 1, max_iter = 1, seed = 999)
+
+  expect_true(any(fit$y > 0 & fit$y < 1))
+
+  pred_response <- predict(fit, newx = x, type = "response")
+  pred_class <- predict(fit, newx = x, type = "class")
+  out_summary <- summary(fit)
+  out_assess <- assess(fit, newx = x, newy = y)
+  out_coef <- coef(fit)
+
+  expect_equal(nrow(pred_response), nrow(x))
+  expect_equal(length(pred_class), nrow(x))
+  expect_equal(out_summary$n_obs, nrow(x))
+  expect_named(out_assess, c("deviance", "class", "auc", "mse", "mae"))
+  expect_s4_class(out_coef, "dgCMatrix")
+})
