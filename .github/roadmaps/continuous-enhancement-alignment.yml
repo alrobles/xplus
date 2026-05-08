@@ -143,7 +143,7 @@ acceptance_tracking:
     - "Roadmap status reflects merged vs pending work"
     - "Blockers and dependency state are visible"
   references:
-    issue: "TBD (replace with direct GitHub issue URL, e.g., https://github.com/alrobles/xplus/issues/<number>)"
+    issue: "https://github.com/alrobles/xplus/issues/41"
     background:
       - "plus_algorithm.tex review"
       - "alrobles/xplus#39"
