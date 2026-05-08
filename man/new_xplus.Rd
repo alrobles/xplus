@@ -59,3 +59,4 @@ obj <- new_xplus(fit_xplus = fit, pred_y = matrix(0.5, 10, 1), cutoff = 0.5)
 \seealso{
 \code{\link[=validate_xplus]{validate_xplus()}}
 }
+\keyword{internal}
