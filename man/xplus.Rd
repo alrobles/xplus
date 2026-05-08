@@ -14,7 +14,8 @@ xplus(
   verbose = FALSE,
   nfolds = 4,
   max_iter = 10000,
-  convergence_threshold = 0.9
+  convergence_threshold = 0.9,
+  seed = NULL
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ xplus(
 \item{max_iter}{Maximum number of pseudo-labeling iterations.}
 
 \item{convergence_threshold}{Proportion threshold for label stability and sampling exhaustion checks.}
+
+\item{seed}{Integer seed passed to \code{\link[=set.seed]{set.seed()}} for reproducibility. When \code{NULL} (default), no seed is set.}
 }
 \value{
 An object of class \code{"xplus"}.
@@ -52,10 +55,9 @@ probabilities. Convergence is reached when pseudo-label changes stabilize above
 }
 \examples{
 \donttest{
-set.seed(1)
 x <- matrix(rnorm(200 * 10), ncol = 10)
 y <- c(rep(1, 40), rep(0, 160))
-fit <- xplus(x, y, max_iter = 20)
+fit <- xplus(x, y, max_iter = 20, seed = 1)
 }
 }
 \references{
