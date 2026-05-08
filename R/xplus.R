@@ -136,7 +136,7 @@ xplus <- function(
 
     pred_y <- 1 / (1 + exp(-10 * map_pred_y))
     update_id <- if (identical(iterative_path, "continuous_enhancement")) unlabeled_id else sample_id
-    label_sample_id_old <- pseudo_labels[update_id]
+    pseudo_labels_before_update <- pseudo_labels[update_id]
 
     if (identical(iterative_path, "continuous_enhancement")) {
       pseudo_labels[update_id] <- pred_y[update_id] * learning_rate + (1 - learning_rate) * pseudo_labels[update_id]
@@ -147,9 +147,9 @@ xplus <- function(
       y[update_id] <- stats::rbinom(length(update_id), 1, pseudo_labels[update_id])
     }
 
-    label_delta <- abs(label_sample_id_old - pseudo_labels[update_id])
+    soft_label_delta <- abs(pseudo_labels_before_update - pseudo_labels[update_id])
     # Pseudo-labels are probabilities in [0, 1], so mean absolute movement is in [0, 1].
-    unchanged <- 1 - mean(label_delta)
+    unchanged <- 1 - mean(soft_label_delta)
 
     prob_chosen[prob_chosen <= 0] <- 0
     change_proportion <- c(change_proportion[-1], unchanged)
