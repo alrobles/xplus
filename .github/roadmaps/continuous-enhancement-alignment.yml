@@ -143,7 +143,7 @@ acceptance_tracking:
     - "Roadmap status reflects merged vs pending work"
     - "Blockers and dependency state are visible"
   references:
-    issue: "alrobles/xplus roadmap meta-issue"
+    issue: "https://github.com/alrobles/xplus/issues?q=%5BRoadmap%5D+Continuous-enhancement+implementation+plan+for+PLUS+algorithm+alignment"
     background:
       - "plus_algorithm.tex review"
       - "alrobles/xplus#39"
