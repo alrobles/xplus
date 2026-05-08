@@ -76,6 +76,7 @@ xplus <- function(
   prob_chosen <- rep(1, length(unlabeled_id))
   names(prob_chosen) <- unlabeled_id
   change_proportion <- rep(0, 5)
+  degenerate_threshold <- 1e-6
   n_iter <- 0
   stop_reason <- "max_iter"
 
@@ -101,16 +102,28 @@ xplus <- function(
 
     if (any(map_pred_y > 0)) {
       max_pos <- max(map_pred_y[map_pred_y > 0])
-      if (max_pos < 1e-6) {
-        warning(sprintf("Near-degenerate positive scaling detected (max residual=%.2e).", max_pos), call. = FALSE)
+      if (max_pos < degenerate_threshold) {
+        warning(
+          sprintf(
+            "Near-degenerate positive scaling detected (max residual=%.2e, approaching numerical precision limits).",
+            max_pos
+          ),
+          call. = FALSE
+        )
       } else {
         map_pred_y[map_pred_y > 0] <- map_pred_y[map_pred_y > 0] / max_pos
       }
     }
     if (any(map_pred_y < 0)) {
       min_neg <- abs(min(map_pred_y[map_pred_y < 0]))
-      if (min_neg < 1e-6) {
-        warning(sprintf("Near-degenerate negative scaling detected (min residual=%.2e).", min_neg), call. = FALSE)
+      if (min_neg < degenerate_threshold) {
+        warning(
+          sprintf(
+            "Near-degenerate negative scaling detected (min residual=%.2e, approaching numerical precision limits).",
+            min_neg
+          ),
+          call. = FALSE
+        )
       } else {
         map_pred_y[map_pred_y < 0] <- map_pred_y[map_pred_y < 0] / min_neg
       }
