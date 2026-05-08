@@ -37,6 +37,22 @@ assess(fit, newx = x, newy = y)
 5. Stop when labels stabilize or sampling budget is exhausted.
 6. Refit final model with relabeled data.
 
+## Reproducible path comparison harness
+
+You can benchmark the current and continuous-enhancement paths side by side with fixed seeds:
+
+```bash
+Rscript inst/tools/benchmark_paths.R
+```
+
+The script writes:
+
+- `path_comparison_runs.csv` (machine-readable per-seed metrics)
+- `path_comparison_summary.csv` (machine-readable aggregate metrics)
+- `path_comparison_table.md` (human-readable comparison table)
+
+Metrics include AUC, class error, coefficient support/sparsity, convergence iterations, runtime, and stability under fixed seeds.
+
 ## Reference
 
 Zhou et al. (2022), PLoS Computational Biology, doi:10.1371/journal.pcbi.1009956.
