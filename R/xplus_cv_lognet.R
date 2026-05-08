@@ -61,6 +61,10 @@ xplus_cv_lognet <- function(predmat, y, type.measure = c("deviance", "class", "a
         ly <- drop((y * ly) %*% c(1, 1))
         2 * (ly - lp)
       },
+      # Misclassification error: 1 when prediction doesn't match true label
+      # - For true class 0 (y[,1]=1): error when predmat > cutoff (predict class 1)
+      # - For true class 1 (y[,2]=1): error when predmat <= cutoff (predict class 0)
+      # This matches predict.xplus() which uses: as.factor(prob > object$cutoff)
       class = y[, 1] * (predmat > cutoff) + y[, 2] * (predmat <= cutoff)
     )
   }
