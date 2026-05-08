@@ -1,0 +1,149 @@
+meta:
+  title: "[Roadmap] Continuous-enhancement implementation plan for PLUS algorithm alignment"
+  owner: "Lead / Coordinator (Master Agent)"
+  purpose: >-
+    Preserve package stability while progressively aligning xplus with the
+    continuous-enhancement direction from the PLUS review.
+  status: active
+
+principles:
+  - "Stability and reproducibility before algorithmic expansion"
+  - "Dependency-aware activation (no speculative implementation)"
+  - "Single-agent ownership per active task"
+  - "Evidence-driven merge readiness"
+
+execution_order:
+  - phase: "Foundation"
+    activate:
+      - P0
+      - P1-harness-scaffold
+    gate: "P0 must merge before backbone work can begin"
+  - phase: "Backbone"
+    activate:
+      - P1-iterative-path
+    gate: "Backbone contract must be clear before P1-final-fit and P2 tracks"
+  - phase: "Parallel specialization"
+    activate:
+      - P1-final-fit
+      - P2-convergence
+      - P2-robustness
+      - P2-extension-isolation
+    gate: "Backbone merged or explicitly frozen via interface contract"
+  - phase: "Migration decision"
+    activate:
+      - P3-migration-strategy
+    gate: "Harness evidence + technical workstream outcomes available"
+
+workstreams:
+  - id: P0
+    title: "Baseline stabilization"
+    owner: "Agent A"
+    status: active
+    scope:
+      - "docs sync"
+      - "class-metric consistency"
+      - "deterministic tests"
+    blocked_by: []
+    blocks:
+      - P1-iterative-path
+
+  - id: P1-harness-scaffold
+    title: "Validation/comparison harness scaffold (non-invasive)"
+    owner: "Agent B"
+    status: active
+    scope:
+      - "benchmark scripts"
+      - "fixtures"
+      - "comparison scaffolding"
+    constraints:
+      - "No production-behavior changes before P0 merge"
+    blocked_by: []
+    blocks:
+      - P3-migration-strategy
+
+  - id: P1-iterative-path
+    title: "Internal continuous-enhancement iterative path"
+    owner: "Agent C"
+    status: inactive
+    scope:
+      - "continuous pseudo-label updates"
+      - "internal path/interface contract"
+    blocked_by:
+      - P0
+    blocks:
+      - P1-final-fit
+      - P2-convergence
+      - P2-robustness
+      - P2-extension-isolation
+
+  - id: P1-final-fit
+    title: "Final model fit from continuous pseudo-label state"
+    owner: "Agent D"
+    status: inactive
+    blocked_by:
+      - P1-iterative-path
+
+  - id: P2-convergence
+    title: "Soft-label convergence/stopping"
+    owner: "Agent E"
+    status: inactive
+    blocked_by:
+      - P1-iterative-path
+
+  - id: P2-robustness
+    title: "Transformation robustness, threshold normalization, warnings"
+    owner: "Agent F"
+    status: inactive
+    blocked_by:
+      - P1-iterative-path
+
+  - id: P2-extension-isolation
+    title: "Isolate and document extensions vs core enhanced path"
+    owner: "Agent G"
+    status: inactive
+    constraints:
+      - "Do not change core numerical behavior unless required by merged dependencies"
+    blocked_by:
+      - P1-iterative-path
+
+  - id: P3-migration-strategy
+    title: "Migration/default-strategy recommendation"
+    owner: "Agent H"
+    status: inactive
+    scope:
+      - "synthesize harness and workstream evidence"
+      - "recommend internal vs opt-in vs default path"
+    constraints:
+      - "No core algorithm rewrite"
+    blocked_by:
+      - P1-harness-scaffold
+      - P1-final-fit
+      - P2-convergence
+      - P2-robustness
+      - P2-extension-isolation
+
+integration_controls:
+  hotspots:
+    - path: "R/xplus.R"
+      rule: "Only one active agent may modify at a time unless explicitly coordinated"
+  branch_policy:
+    - "Separate branch per agent task"
+    - "Narrow, single-purpose PRs"
+  merge_policy:
+    - "Merge in dependency order"
+    - "Rebase dependent branches after upstream merges"
+  handoff_requirements:
+    - "Summarize changed contracts and preserved invariants"
+    - "List new blockers/unblocked items"
+    - "Attach harness/test evidence"
+
+acceptance_tracking:
+  required:
+    - "Each workstream has linked issue/PR references"
+    - "Roadmap status reflects merged vs pending work"
+    - "Blockers and dependency state are visible"
+  references:
+    issue: "alrobles/xplus roadmap meta-issue"
+    background:
+      - "plus_algorithm.tex review"
+      - "alrobles/xplus#39"
