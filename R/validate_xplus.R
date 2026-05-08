@@ -20,6 +20,12 @@ validate_xplus <- function(xplus_object) {
   stopifnot(is.numeric(values$n_iter), length(values$n_iter) == 1)
   stopifnot(is.matrix(values$x))
   stopifnot(length(values$y) == nrow(values$x))
+  stopifnot(is.numeric(values$pseudo_labels), length(values$pseudo_labels) == nrow(values$x))
+  stopifnot(
+    is.character(values$iterative_path),
+    length(values$iterative_path) == 1,
+    values$iterative_path %in% c("current", "continuous_enhancement")
+  )
   stopifnot(is.numeric(values$max_iter), length(values$max_iter) == 1)
   stopifnot(
     is.character(values$stop_reason),

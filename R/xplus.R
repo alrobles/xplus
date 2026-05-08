@@ -73,6 +73,7 @@ xplus <- function(
   if (length(unlabeled_id) == 0) stop("`y` must contain at least one unlabeled sample.", call. = FALSE)
 
   pseudo_labels <- y
+  iterative_path <- if (learning_rate < 1) "continuous_enhancement" else "current"
   prob_chosen <- rep(1, length(unlabeled_id))
   names(prob_chosen) <- unlabeled_id
   change_proportion <- rep(0, 5)
@@ -132,14 +133,22 @@ xplus <- function(
     }
 
     pred_y <- 1 / (1 + exp(-10 * map_pred_y))
-    pseudo_labels[sample_id] <- pred_y[sample_id] * learning_rate + (1 - learning_rate) * pseudo_labels[sample_id]
+    if (identical(iterative_path, "continuous_enhancement")) {
+      label_sample_id_old <- pseudo_labels[unlabeled_id]
+      pseudo_labels[unlabeled_id] <- pred_y[unlabeled_id] * learning_rate + (1 - learning_rate) * pseudo_labels[unlabeled_id]
+      y[unlabeled_id] <- as.integer(pseudo_labels[unlabeled_id] >= 0.5)
+      label_sample_id_new <- pseudo_labels[unlabeled_id]
+      unchanged <- sum(abs(label_sample_id_old - label_sample_id_new) <= sqrt(.Machine$double.eps)) / length(unlabeled_id)
+    } else {
+      pseudo_labels[sample_id] <- pred_y[sample_id] * learning_rate + (1 - learning_rate) * pseudo_labels[sample_id]
 
-    label_sample_id_old <- y[sample_id]
-    y[sample_id] <- stats::rbinom(length(sample_id), 1, pseudo_labels[sample_id])
-    label_sample_id_new <- y[sample_id]
+      label_sample_id_old <- y[sample_id]
+      y[sample_id] <- stats::rbinom(length(sample_id), 1, pseudo_labels[sample_id])
+      label_sample_id_new <- y[sample_id]
+      unchanged <- sum(label_sample_id_old == label_sample_id_new) / length(sample_id)
+    }
 
     prob_chosen[prob_chosen <= 0] <- 0
-    unchanged <- sum(label_sample_id_old == label_sample_id_new) / length(sample_id)
     change_proportion <- c(change_proportion[-1], unchanged)
     n_iter <- i
 
@@ -175,6 +184,8 @@ xplus <- function(
     y = y,
     alpha = alpha,
     learning_rate = learning_rate,
+    pseudo_labels = pseudo_labels,
+    iterative_path = iterative_path,
     qq = qq,
     stop_reason = stop_reason,
     max_iter = max_iter,
