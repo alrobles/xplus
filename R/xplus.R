@@ -52,10 +52,13 @@ xplus <- function(
   if (!is.null(seed)) set.seed(as.integer(seed))
 
   if (!is.matrix(x)) stop("`x` must be a matrix.", call. = FALSE)
+  if (anyNA(x)) stop("`x` must not contain NA values.", call. = FALSE)
+  if (any(is.infinite(x))) stop("`x` must not contain Inf values.", call. = FALSE)
   if (nrow(x) != length(y)) stop("`x` and `y` must have matching dimensions.", call. = FALSE)
   if (!all(y %in% c(0, 1))) stop("`y` must contain only 0 and 1.", call. = FALSE)
   if (!is.numeric(alpha) || length(alpha) != 1 || alpha < 0 || alpha > 1) stop("`alpha` must be a numeric scalar in [0, 1].", call. = FALSE)
   if (!is.numeric(sample_use_time) || sample_use_time <= 0) stop("`sample_use_time` must be > 0.", call. = FALSE)
+  if (sample_use_time != round(sample_use_time)) stop("`sample_use_time` must be an integer-like value.", call. = FALSE)
   if (!is.numeric(learning_rate) || learning_rate < 0 || learning_rate > 1) stop("`learning_rate` must be in [0, 1].", call. = FALSE)
   if (!is.numeric(qq) || qq < 0 || qq > 1) stop("`qq` must be in [0, 1].", call. = FALSE)
   if (!is.numeric(nfolds) || nfolds < 2) stop("`nfolds` must be >= 2.", call. = FALSE)
@@ -100,10 +103,20 @@ xplus <- function(
     map_pred_y <- pred_y - cutoff
 
     if (any(map_pred_y > 0)) {
-      map_pred_y[map_pred_y > 0] <- map_pred_y[map_pred_y > 0] / max(map_pred_y[map_pred_y > 0])
+      max_pos <- max(map_pred_y[map_pred_y > 0])
+      if (max_pos < 1e-6) {
+        warning("Near-degenerate threshold detected: max positive residual is very small (",
+                sprintf("%.2e", max_pos), ").", call. = FALSE)
+      }
+      map_pred_y[map_pred_y > 0] <- map_pred_y[map_pred_y > 0] / max_pos
     }
     if (any(map_pred_y < 0)) {
-      map_pred_y[map_pred_y < 0] <- map_pred_y[map_pred_y < 0] / abs(min(map_pred_y[map_pred_y < 0]))
+      min_neg <- abs(min(map_pred_y[map_pred_y < 0]))
+      if (min_neg < 1e-6) {
+        warning("Near-degenerate threshold detected: max negative residual is very small (",
+                sprintf("%.2e", min_neg), ").", call. = FALSE)
+      }
+      map_pred_y[map_pred_y < 0] <- map_pred_y[map_pred_y < 0] / min_neg
     }
 
     pred_y <- 1 / (1 + exp(-10 * map_pred_y))
