@@ -22,6 +22,8 @@ assess(object, newx = NULL, newy, weights = NULL, ...)
 }
 \value{
 A named list with \code{deviance}, \code{class}, \code{auc}, \code{mse}, and \code{mae}.
+For \code{class} metric, the threshold used is the model's cutoff (from
+\code{object$cutoff}), consistent with \code{predict(type = "class")}.
 }
 \description{
 Assess predictive performance

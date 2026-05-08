@@ -16,7 +16,8 @@ new_xplus(
   learning_rate = numeric(),
   qq = numeric(),
   call = character(),
-  max_iter = integer()
+  max_iter = integer(),
+  stop_reason = character()
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ new_xplus(
 \item{call}{Original function call.}
 
 \item{max_iter}{Maximum number of iterations configured for fitting.}
+
+\item{stop_reason}{Reason fitting stopped: \code{"max_iter"}, \code{"label_stability"}, or \code{"budget_exhausted"}.}
 }
 \value{
 An object of class \code{"xplus"}.

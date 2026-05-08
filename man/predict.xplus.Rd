@@ -15,10 +15,11 @@
 
 \item{s}{Penalty value name (\code{"lambda.min"}, \code{"lambda.1se"}) or numeric lambda.}
 
-\item{type}{Prediction type: \code{"response"} or \code{"class"}.}
+\item{type}{Prediction type: \code{"response"}, \code{"link"}, or \code{"class"}.}
 }
 \value{
-A matrix of probabilities (\code{type = "response"}) or class labels (\code{type = "class"}).
+A matrix of probabilities (\code{type = "response"}), log-odds linear
+predictors (\code{type = "link"}), or class labels (\code{type = "class"}).
 }
 \description{
 Predict from an xplus model
@@ -29,6 +30,7 @@ x <- matrix(rnorm(100 * 5), ncol = 5)
 y <- c(rep(1, 20), rep(0, 80))
 fit <- xplus(x, y, max_iter = 5)
 predict(fit, newx = x, type = "response")
+predict(fit, newx = x, type = "link")
 }
 \references{
 Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956

@@ -51,12 +51,10 @@ probabilities. Convergence is reached when pseudo-label changes stabilize above
 \code{convergence_threshold} or the sampling budget is consumed.
 }
 \examples{
-\donttest{
 set.seed(1)
 x <- matrix(rnorm(200 * 10), ncol = 10)
 y <- c(rep(1, 40), rep(0, 160))
 fit <- xplus(x, y, max_iter = 20)
-}
 }
 \references{
 Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956

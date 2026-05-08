@@ -4,7 +4,7 @@
 #'
 #' @param x Numeric feature matrix.
 #' @param y Binary vector where `1` indicates known positives and `0` indicates unlabeled samples.
-#' @param alpha Elastic-net mixing parameter passed to [glmnet::cv.glmnet()]; must be in `[0, 1]`.
+#' @param alpha Elastic-net mixing parameter passed to [glmnet::cv.glmnet()].
 #' @param sample_use_time Number of times each unlabeled sample can be selected before its sampling probability reaches zero.
 #' @param learning_rate Learning-rate for pseudo-label updates in `[0, 1]`.
 #' @param qq Quantile used to define the positive-reference cutoff.
@@ -12,7 +12,6 @@
 #' @param nfolds Number of CV folds used in the iterative fit.
 #' @param max_iter Maximum number of pseudo-labeling iterations.
 #' @param convergence_threshold Proportion threshold for label stability and sampling exhaustion checks.
-#' @param seed Integer seed passed to [set.seed()] for reproducibility. When `NULL` (default), no seed is set.
 #'
 #' @details
 #' The PLUS algorithm alternates between fitting penalized logistic models on known positives
@@ -23,13 +22,11 @@
 #' @return An object of class `"xplus"`.
 #' @references Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
 #' @seealso [predict.xplus()], [summary.xplus()], [assess.xplus()]
-#' @importFrom stats predict
 #' @examples
-#' \donttest{
+#' set.seed(1)
 #' x <- matrix(rnorm(200 * 10), ncol = 10)
 #' y <- c(rep(1, 40), rep(0, 160))
-#' fit <- xplus(x, y, max_iter = 20, seed = 1)
-#' }
+#' fit <- xplus(x, y, max_iter = 20)
 #' @export
 xplus <- function(
   x,
@@ -41,24 +38,15 @@ xplus <- function(
   verbose = FALSE,
   nfolds = 4,
   max_iter = 10000,
-  convergence_threshold = 0.9,
-  seed = NULL
+  convergence_threshold = 0.9
 ) {
   this.call <- match.call()
 
-  if (!is.null(seed) && (!is.numeric(seed) || length(seed) != 1)) {
-    stop("`seed` must be a single numeric value or NULL.", call. = FALSE)
-  }
-  if (!is.null(seed)) set.seed(as.integer(seed))
-
   if (!is.matrix(x)) stop("`x` must be a matrix.", call. = FALSE)
-  if (anyNA(x)) stop("`x` must not contain NA values.", call. = FALSE)
-  if (any(is.infinite(x))) stop("`x` must not contain Inf values.", call. = FALSE)
   if (nrow(x) != length(y)) stop("`x` and `y` must have matching dimensions.", call. = FALSE)
   if (!all(y %in% c(0, 1))) stop("`y` must contain only 0 and 1.", call. = FALSE)
-  if (!is.numeric(alpha) || length(alpha) != 1 || alpha < 0 || alpha > 1) stop("`alpha` must be a numeric scalar in [0, 1].", call. = FALSE)
+  if (!is.numeric(alpha) || length(alpha) != 1) stop("`alpha` must be a scalar numeric value.", call. = FALSE)
   if (!is.numeric(sample_use_time) || sample_use_time <= 0) stop("`sample_use_time` must be > 0.", call. = FALSE)
-  if (sample_use_time != round(sample_use_time)) stop("`sample_use_time` must be an integer-like value.", call. = FALSE)
   if (!is.numeric(learning_rate) || learning_rate < 0 || learning_rate > 1) stop("`learning_rate` must be in [0, 1].", call. = FALSE)
   if (!is.numeric(qq) || qq < 0 || qq > 1) stop("`qq` must be in [0, 1].", call. = FALSE)
   if (!is.numeric(nfolds) || nfolds < 2) stop("`nfolds` must be >= 2.", call. = FALSE)
@@ -78,9 +66,8 @@ xplus <- function(
   pseudo_labels <- y
   prob_chosen <- rep(1, length(unlabeled_id))
   names(prob_chosen) <- unlabeled_id
-  change_proportion <- rep(NA_real_, 5)
+  change_proportion <- rep(0, 5)
   n_iter <- 0
-  stop_reason <- "max_iter"
 
   for (i in seq_len(max_iter)) {
     sample_id <- sample(unlabeled_id, length(positive_id), replace = TRUE, prob = prob_chosen)
@@ -103,20 +90,10 @@ xplus <- function(
     map_pred_y <- pred_y - cutoff
 
     if (any(map_pred_y > 0)) {
-      max_pos <- max(map_pred_y[map_pred_y > 0])
-      if (max_pos < 1e-6) {
-        warning("Near-degenerate threshold detected: max positive residual is very small (",
-                sprintf("%.2e", max_pos), ").", call. = FALSE)
-      }
-      map_pred_y[map_pred_y > 0] <- map_pred_y[map_pred_y > 0] / max_pos
+      map_pred_y[map_pred_y > 0] <- map_pred_y[map_pred_y > 0] / max(map_pred_y[map_pred_y > 0])
     }
     if (any(map_pred_y < 0)) {
-      min_neg <- abs(min(map_pred_y[map_pred_y < 0]))
-      if (min_neg < 1e-6) {
-        warning("Near-degenerate threshold detected: max negative residual is very small (",
-                sprintf("%.2e", min_neg), ").", call. = FALSE)
-      }
-      map_pred_y[map_pred_y < 0] <- map_pred_y[map_pred_y < 0] / min_neg
+      map_pred_y[map_pred_y < 0] <- map_pred_y[map_pred_y < 0] / abs(min(map_pred_y[map_pred_y < 0]))
     }
 
     pred_y <- 1 / (1 + exp(-10 * map_pred_y))
@@ -127,10 +104,6 @@ xplus <- function(
     label_sample_id_new <- y[sample_id]
 
     prob_chosen[prob_chosen <= 0] <- 0
-    if (all(prob_chosen <= 0)) {
-      if (isTRUE(verbose)) message("Stopping: all sampling probabilities exhausted.")
-      break
-    }
     unchanged <- sum(label_sample_id_old == label_sample_id_new) / length(sample_id)
     change_proportion <- c(change_proportion[-1], unchanged)
     n_iter <- i
@@ -141,27 +114,16 @@ xplus <- function(
 
     if (sum(prob_chosen <= 0.01) > (convergence_threshold * length(prob_chosen))) {
       if (isTRUE(verbose)) message("Stopping: sampling budget exhausted.")
-      stop_reason <- "budget_exhausted"
       break
     }
 
-    if (mean(change_proportion, na.rm = TRUE) > convergence_threshold) {
+    if (mean(change_proportion) > convergence_threshold) {
       if (isTRUE(verbose)) message("Stopping: label stability reached.")
-      stop_reason <- "label_stability"
       break
     }
   }
 
-  fit_pi <- glmnet::cv.glmnet(
-    x = x,
-    y = y,
-    alpha = alpha,
-    type.measure = "auc",
-    nfolds = nfolds,
-    thresh = 1e-3,
-    maxit = 1e3,
-    family = "binomial"
-  )
+  fit_pi <- glmnet::cv.glmnet(x, y, family = "binomial")
   pred_y <- stats::predict(fit_pi, newx = x, s = "lambda.min", type = "response")
   cutoff <- stats::quantile(pred_y[positive_id], qq)
   pred_coef1 <- glmnet::coef.glmnet(fit_pi, s = "lambda.min")
@@ -178,7 +140,6 @@ xplus <- function(
     learning_rate = learning_rate,
     qq = qq,
     max_iter = max_iter,
-    stop_reason = stop_reason,
     call = this.call
   )
 
