@@ -37,8 +37,8 @@ support_stability_score <- function(support_sets) {
     return(1)
   }
 
-  pair_index <- utils::combn(n, 2)
-  scores <- apply(pair_index, 2, function(pair) {
+  pair_indices <- utils::combn(n, 2)
+  scores <- apply(pair_indices, 2, function(pair) {
     a <- support_sets[[pair[1]]]
     b <- support_sets[[pair[2]]]
     union <- union(a, b)
@@ -119,7 +119,7 @@ write_markdown_table <- function(summary_df, seeds, output_file) {
     "",
     paste0("Seeds: ", paste(seeds, collapse = ", ")),
     "",
-    "| path | auc (mean±sd) | class error (mean±sd) | support size (mean±sd) | sparsity (mean±sd) | iterations (mean±sd) | runtime seconds (mean±sd) | support jaccard |",
+    "| path | auc (mean+/-sd) | class error (mean+/-sd) | support size (mean+/-sd) | sparsity (mean+/-sd) | iterations (mean+/-sd) | runtime seconds (mean+/-sd) | support jaccard |",
     "| --- | --- | --- | --- | --- | --- | --- | --- |"
   )
 
@@ -128,7 +128,7 @@ write_markdown_table <- function(summary_df, seeds, output_file) {
     fmt <- function(mean_col, sd_col) {
       paste0(
         format(round(row[[mean_col]], digits), nsmall = digits, trim = TRUE),
-        " ± ",
+        " +/- ",
         format(round(row[[sd_col]], digits), nsmall = digits, trim = TRUE)
       )
     }
