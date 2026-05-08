@@ -76,8 +76,10 @@ xplus <- function(
   prob_chosen <- rep(1, length(unlabeled_id))
   names(prob_chosen) <- unlabeled_id
   change_proportion <- rep(0, 5)
+  # Residuals below this threshold are effectively at numerical precision.
   degenerate_threshold <- 1e-6
   n_iter <- 0
+  # If no early stopping condition triggers, fitting stops at max_iter.
   stop_reason <- "max_iter"
 
   for (i in seq_len(max_iter)) {
