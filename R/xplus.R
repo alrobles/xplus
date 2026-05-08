@@ -137,19 +137,17 @@ xplus <- function(
     pred_y <- 1 / (1 + exp(-10 * map_pred_y))
     update_indices <- if (identical(iterative_path, "continuous_enhancement")) unlabeled_id else sample_id
     pseudo_labels_before_update <- pseudo_labels[update_indices]
+    pseudo_labels[update_indices] <- pred_y[update_indices] * learning_rate + (1 - learning_rate) * pseudo_labels[update_indices]
 
     if (identical(iterative_path, "continuous_enhancement")) {
-      pseudo_labels[update_indices] <- pred_y[update_indices] * learning_rate + (1 - learning_rate) * pseudo_labels[update_indices]
       y[unlabeled_id] <- as.integer(pseudo_labels[unlabeled_id] >= pseudo_label_cutoff)
     } else {
-      pseudo_labels[update_indices] <- pred_y[update_indices] * learning_rate + (1 - learning_rate) * pseudo_labels[update_indices]
-
       y[update_indices] <- stats::rbinom(length(update_indices), 1, pseudo_labels[update_indices])
     }
 
-    soft_label_delta <- abs(pseudo_labels_before_update - pseudo_labels[update_indices])
+    soft_label_deltas <- abs(pseudo_labels_before_update - pseudo_labels[update_indices])
     # Pseudo-labels are probabilities in [0, 1], so mean absolute movement is in [0, 1].
-    stabilization_score <- 1 - mean(soft_label_delta)
+    stabilization_score <- 1 - mean(soft_label_deltas)
 
     prob_chosen[prob_chosen <= 0] <- 0
     change_proportion <- c(change_proportion[-1], stabilization_score)
