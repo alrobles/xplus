@@ -140,6 +140,7 @@ xplus <- function(
       pseudo_labels[unlabeled_id] <- pred_y[unlabeled_id] * learning_rate + (1 - learning_rate) * pseudo_labels[unlabeled_id]
       y[unlabeled_id] <- as.integer(pseudo_labels[unlabeled_id] >= pseudo_label_cutoff)
       label_sample_id_new <- pseudo_labels[unlabeled_id]
+      # Continuous path tracks pseudo-label drift with a numeric tolerance.
       unchanged <- sum(abs(label_sample_id_old - label_sample_id_new) <= pseudo_label_tolerance) / length(unlabeled_id)
     } else {
       pseudo_labels[sample_id] <- pred_y[sample_id] * learning_rate + (1 - learning_rate) * pseudo_labels[sample_id]

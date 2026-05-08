@@ -56,7 +56,7 @@ new_xplus <- function(
       alpha = alpha,
       learning_rate = learning_rate,
       pseudo_labels = pseudo_labels,
-      iterative_path = as.character(iterative_path)[1],
+      iterative_path = as.character(iterative_path),
       qq = qq,
       call = call,
       max_iter = max_iter,
