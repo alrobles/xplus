@@ -5,7 +5,7 @@
   )
   toset <- !(names(op.xplus) %in% names(op))
   if (any(toset)) options(op.xplus[toset])
-  assign("xplus", new.env(), envir = parent.env(environment()))
+  assign(".xplus_env", new.env(), envir = parent.env(environment()))
 }
 
 xplusStartupMessage <- function()
@@ -22,7 +22,7 @@ xplusStartupMessage <- function()
 
 .onAttach <- function(lib, pkg)
 {
-  unlockBinding("xplus", asNamespace("xplus"))
+  unlockBinding(".xplus_env", asNamespace("xplus"))
   msg <- xplusStartupMessage()
   if (!interactive())
     msg[1] <- paste("Package 'xplus' version", utils::packageVersion("xplus"))

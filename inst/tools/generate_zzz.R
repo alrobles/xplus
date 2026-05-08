@@ -70,7 +70,7 @@ template <- '.onLoad <- function(libname, pkgname) {
   )
   toset <- !(names(op.<<PKG>>) %in% names(op))
   if (any(toset)) options(op.<<PKG>>[toset])
-  assign("<<PKG>>", new.env(), envir = parent.env(environment()))
+  assign(".<<PKG>>_env", new.env(), envir = parent.env(environment()))
 }
 
 <<PKG>>StartupMessage <- function()
@@ -87,7 +87,7 @@ template <- '.onLoad <- function(libname, pkgname) {
 
 .onAttach <- function(lib, pkg)
 {
-  unlockBinding("<<PKG>>", asNamespace("<<PKG>>"))
+  unlockBinding(".<<PKG>>_env", asNamespace("<<PKG>>"))
   msg <- <<PKG>>StartupMessage()
   if (!interactive())
     msg[1] <- paste("Package <<SQ>><<PKG>><<SQ>> version", utils::packageVersion("<<PKG>>"))
