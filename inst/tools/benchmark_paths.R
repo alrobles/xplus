@@ -20,11 +20,10 @@ default_path_specs <- function(max_iter = 30, nfolds = 4) {
 
 default_benchmark_inputs <- function() {
   if (exists("fit_xplus_example", inherits = TRUE)) {
-    fit <- get("fit_xplus_example", inherits = TRUE)
   } else {
     data("fit_xplus_example", package = "xplus", envir = environment())
-    fit <- get("fit_xplus_example", inherits = TRUE)
   }
+  fit <- get("fit_xplus_example", inherits = TRUE)
   list(x = fit$x, y = fit$y)
 }
 
@@ -33,7 +32,7 @@ extract_support <- function(fit) {
   which(coefficients != 0)
 }
 
-pairwise_jaccard_mean <- function(support_sets) {
+support_stability_score <- function(support_sets) {
   n <- length(support_sets)
   if (n < 2) {
     return(1)
@@ -105,7 +104,7 @@ summarize_runs <- function(run_df) {
       n_iter_sd = stats::sd(path_runs$n_iter),
       runtime_seconds_mean = mean(path_runs$runtime_seconds),
       runtime_seconds_sd = stats::sd(path_runs$runtime_seconds),
-      support_jaccard_mean = pairwise_jaccard_mean(support_sets),
+      support_jaccard_mean = support_stability_score(support_sets),
       stringsAsFactors = FALSE
     )
   })
@@ -115,7 +114,6 @@ summarize_runs <- function(run_df) {
 
 write_markdown_table <- function(summary_df, seeds, output_file) {
   digits <- 6
-  numeric_columns <- names(summary_df)[vapply(summary_df, is.numeric, logical(1))]
 
   lines <- c(
     "# xplus path comparison",
