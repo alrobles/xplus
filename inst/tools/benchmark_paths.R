@@ -1,6 +1,11 @@
 #!/usr/bin/env Rscript
 
-default_path_specs <- function(max_iter = 30, nfolds = 4) {
+default_path_specs <- function(
+  max_iter = 30,
+  nfolds = 4,
+  enhanced_learning_rate = 0.5,
+  enhanced_sample_use_time = 60
+) {
   list(
     current = list(
       label = "current",
@@ -11,8 +16,8 @@ default_path_specs <- function(max_iter = 30, nfolds = 4) {
       args = list(
         max_iter = max_iter,
         nfolds = nfolds,
-        learning_rate = 0.5,
-        sample_use_time = 60
+        learning_rate = enhanced_learning_rate,
+        sample_use_time = enhanced_sample_use_time
       )
     )
   )
@@ -29,6 +34,13 @@ default_benchmark_inputs <- function() {
 extract_support <- function(fit) {
   coefficients <- as.numeric(stats::coef(fit))[-1]
   which(coefficients != 0)
+}
+
+calculate_sparsity <- function(support_size, n_features) {
+  if (n_features <= 0) {
+    return(NA_real_)
+  }
+  1 - (support_size / n_features)
 }
 
 support_stability_score <- function(support_sets) {
@@ -65,7 +77,7 @@ run_single_path_seed <- function(x, y, path_name, seed, args) {
   support <- extract_support(fit)
   n_features <- ncol(x)
   support_size <- length(support)
-  sparsity <- if (n_features > 0) 1 - (support_size / n_features) else NA_real_
+  sparsity <- calculate_sparsity(support_size, n_features)
 
   data.frame(
     path = path_name,

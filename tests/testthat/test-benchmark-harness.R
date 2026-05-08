@@ -18,6 +18,7 @@ test_that("benchmark harness returns required comparison metrics", {
 
   path_specs <- harness$default_path_specs(max_iter = 3, nfolds = 2)
   output_dir <- file.path(tempdir(), "xplus-benchmark-output")
+  on.exit(unlink(output_dir, recursive = TRUE, force = TRUE), add = TRUE)
 
   result <- harness$run_xplus_path_benchmark(
     x = x,
