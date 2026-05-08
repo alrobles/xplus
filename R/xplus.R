@@ -11,14 +11,15 @@
 #' @param verbose Logical; print iterative progress messages.
 #' @param nfolds Number of CV folds used in the iterative fit.
 #' @param max_iter Maximum number of pseudo-labeling iterations.
-#' @param convergence_threshold Proportion threshold for label stability and sampling exhaustion checks.
+#' @param convergence_threshold Proportion threshold for soft-label stabilization and sampling exhaustion checks.
 #' @param seed Optional random seed for reproducibility.
 #'
 #' @details
 #' The PLUS algorithm alternates between fitting penalized logistic models on known positives
 #' and sampled unlabeled cases, then updating unlabeled pseudo-labels from calibrated
-#' probabilities. Convergence is reached when pseudo-label changes stabilize above
-#' `convergence_threshold` or the sampling budget is consumed.
+#' probabilities. Convergence is reached when soft-label movement stabilizes above
+#' `convergence_threshold` (as a rolling mean stabilization score) or the
+#' sampling budget is consumed.
 #'
 #' @return An object of class `"xplus"`.
 #' @references Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
@@ -79,7 +80,6 @@ xplus <- function(
   change_proportion <- rep(0, 5)
   # Residuals below this threshold are effectively at numerical precision.
   degenerate_threshold <- 1e-6
-  pseudo_label_tolerance <- sqrt(.Machine$double.eps)
   pseudo_label_cutoff <- 0.5
   n_iter <- 0
   # If no early stopping condition triggers, fitting stops at max_iter.
@@ -140,16 +140,18 @@ xplus <- function(
       pseudo_labels[unlabeled_id] <- pred_y[unlabeled_id] * learning_rate + (1 - learning_rate) * pseudo_labels[unlabeled_id]
       y[unlabeled_id] <- as.integer(pseudo_labels[unlabeled_id] >= pseudo_label_cutoff)
       label_sample_id_new <- pseudo_labels[unlabeled_id]
-      # Continuous path tracks pseudo-label drift with a numeric tolerance.
-      unchanged <- sum(abs(label_sample_id_old - label_sample_id_new) <= pseudo_label_tolerance) / length(unlabeled_id)
+      label_delta <- abs(label_sample_id_old - label_sample_id_new)
     } else {
+      label_sample_id_old <- pseudo_labels[sample_id]
       pseudo_labels[sample_id] <- pred_y[sample_id] * learning_rate + (1 - learning_rate) * pseudo_labels[sample_id]
 
-      label_sample_id_old <- y[sample_id]
       y[sample_id] <- stats::rbinom(length(sample_id), 1, pseudo_labels[sample_id])
-      label_sample_id_new <- y[sample_id]
-      unchanged <- sum(label_sample_id_old == label_sample_id_new) / length(sample_id)
+      label_sample_id_new <- pseudo_labels[sample_id]
+      label_delta <- abs(label_sample_id_old - label_sample_id_new)
     }
+
+    # Stabilization score is derived from soft-label movement magnitude.
+    unchanged <- 1 - mean(pmin(label_delta, 1))
 
     prob_chosen[prob_chosen <= 0] <- 0
     change_proportion <- c(change_proportion[-1], unchanged)
