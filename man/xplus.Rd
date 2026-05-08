@@ -37,7 +37,7 @@ xplus(
 
 \item{max_iter}{Maximum number of pseudo-labeling iterations.}
 
-\item{convergence_threshold}{Proportion threshold for label stability and sampling exhaustion checks.}
+\item{convergence_threshold}{Proportion threshold for soft-label stabilization and sampling exhaustion checks.}
 
 \item{seed}{Optional random seed for reproducibility.}
 }
@@ -50,8 +50,9 @@ Fit the PLUS algorithm for positive-unlabeled learning.
 \details{
 The PLUS algorithm alternates between fitting penalized logistic models on known positives
 and sampled unlabeled cases, then updating unlabeled pseudo-labels from calibrated
-probabilities. Convergence is reached when pseudo-label changes stabilize above
-\code{convergence_threshold} or the sampling budget is consumed.
+probabilities. Convergence is reached when soft-label movement stabilizes above
+\code{convergence_threshold} (as a rolling mean stabilization score) or the
+sampling budget is consumed.
 }
 \examples{
 set.seed(1)

@@ -11,14 +11,15 @@
 #' @param verbose Logical; print iterative progress messages.
 #' @param nfolds Number of CV folds used in the iterative fit.
 #' @param max_iter Maximum number of pseudo-labeling iterations.
-#' @param convergence_threshold Proportion threshold for label stability and sampling exhaustion checks.
+#' @param convergence_threshold Proportion threshold for soft-label stabilization and sampling exhaustion checks.
 #' @param seed Optional random seed for reproducibility.
 #'
 #' @details
 #' The PLUS algorithm alternates between fitting penalized logistic models on known positives
 #' and sampled unlabeled cases, then updating unlabeled pseudo-labels from calibrated
-#' probabilities. Convergence is reached when pseudo-label changes stabilize above
-#' `convergence_threshold` or the sampling budget is consumed.
+#' probabilities. Convergence is reached when soft-label movement stabilizes above
+#' `convergence_threshold` (as a rolling mean stabilization score) or the
+#' sampling budget is consumed.
 #'
 #' @return An object of class `"xplus"`.
 #' @references Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
@@ -79,7 +80,6 @@ xplus <- function(
   change_proportion <- rep(0, 5)
   # Residuals below this threshold are effectively at numerical precision.
   degenerate_threshold <- 1e-6
-  pseudo_label_tolerance <- sqrt(.Machine$double.eps)
   pseudo_label_cutoff <- 0.5
   n_iter <- 0
   # If no early stopping condition triggers, fitting stops at max_iter.
@@ -135,28 +135,26 @@ xplus <- function(
     }
 
     pred_y <- 1 / (1 + exp(-10 * map_pred_y))
-    if (identical(iterative_path, "continuous_enhancement")) {
-      label_sample_id_old <- pseudo_labels[unlabeled_id]
-      pseudo_labels[unlabeled_id] <- pred_y[unlabeled_id] * learning_rate + (1 - learning_rate) * pseudo_labels[unlabeled_id]
-      y[unlabeled_id] <- as.integer(pseudo_labels[unlabeled_id] >= pseudo_label_cutoff)
-      label_sample_id_new <- pseudo_labels[unlabeled_id]
-      # Continuous path tracks pseudo-label drift with a numeric tolerance.
-      unchanged <- sum(abs(label_sample_id_old - label_sample_id_new) <= pseudo_label_tolerance) / length(unlabeled_id)
-    } else {
-      pseudo_labels[sample_id] <- pred_y[sample_id] * learning_rate + (1 - learning_rate) * pseudo_labels[sample_id]
+    update_indices <- if (identical(iterative_path, "continuous_enhancement")) unlabeled_id else sample_id
+    pseudo_labels_before_update <- pseudo_labels[update_indices]
+    pseudo_labels[update_indices] <- pred_y[update_indices] * learning_rate + (1 - learning_rate) * pseudo_labels[update_indices]
 
-      label_sample_id_old <- y[sample_id]
-      y[sample_id] <- stats::rbinom(length(sample_id), 1, pseudo_labels[sample_id])
-      label_sample_id_new <- y[sample_id]
-      unchanged <- sum(label_sample_id_old == label_sample_id_new) / length(sample_id)
+    if (identical(iterative_path, "continuous_enhancement")) {
+      y[update_indices] <- as.integer(pseudo_labels[update_indices] >= pseudo_label_cutoff)
+    } else {
+      y[update_indices] <- stats::rbinom(length(update_indices), 1, pseudo_labels[update_indices])
     }
 
+    soft_label_deltas <- abs(pseudo_labels_before_update - pseudo_labels[update_indices])
+    # Pseudo-labels are probabilities in [0, 1], so mean absolute movement is in [0, 1].
+    stabilization_score <- 1 - mean(soft_label_deltas)
+
     prob_chosen[prob_chosen <= 0] <- 0
-    change_proportion <- c(change_proportion[-1], unchanged)
+    change_proportion <- c(change_proportion[-1], stabilization_score)
     n_iter <- i
 
     if (isTRUE(verbose) && (i %% 10 == 0 || i == 1)) {
-      message(sprintf("Iteration %d: unchanged=%.3f", i, unchanged))
+      message(sprintf("Iteration %d: stabilization=%.3f", i, stabilization_score))
     }
 
     if (sum(prob_chosen <= 0.01) > (convergence_threshold * length(prob_chosen))) {

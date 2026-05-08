@@ -48,6 +48,27 @@ test_that("xplus can stop on early label stability", {
   expect_equal(summary(fit)$iterative_path, "continuous_enhancement")
 })
 
+test_that("xplus stabilization is based on soft-label movement magnitude", {
+  skip_if_not_installed("glmnet")
+  set.seed(234)
+  x <- matrix(rnorm(100 * 5), ncol = 5)
+  y <- c(rep(1, 25), rep(0, 75))
+
+  fit <- xplus(
+    x,
+    y,
+    learning_rate = 1e-4,
+    sample_use_time = 1e6,
+    convergence_threshold = 0.99,
+    max_iter = 10,
+    seed = 234
+  )
+
+  expect_equal(fit$iterative_path, "continuous_enhancement")
+  expect_equal(fit$n_iter, 1)
+  expect_equal(fit$stop_reason, "label_stability")
+})
+
 test_that("continuous enhancement path keeps pseudo-labels continuous", {
   skip_if_not_installed("glmnet")
   set.seed(321)
