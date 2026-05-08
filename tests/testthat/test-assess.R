@@ -31,7 +31,8 @@ test_that("assess class metric matches manual and predict type='class' threshold
   fit <- structure(
     list(
       pred_y = matrix(c(0.2, 0.5, 0.51, 0.8, 0.49, 0.75, 0.1, 0.95, 0.65, 0.35, 0.55, 0.45), ncol = 1),
-      cutoff = 0.5
+      cutoff = 0.5,
+      stop_reason = "max_iter"
     ),
     class = "xplus"
   )
