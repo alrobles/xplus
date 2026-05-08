@@ -27,30 +27,24 @@ test_that("assess AUC is not corrupted by double sigmoid", {
   expect_gt(auc_val, 0.5)
 })
 
-test_that("assess class metric uses same threshold as predict type='class'", {
-  skip_if_not_installed("glmnet")
-  set.seed(123)
-  x <- matrix(rnorm(120 * 4), ncol = 4)
-  y <- c(rep(1, 30), rep(0, 90))
+test_that("assess class metric matches manual and predict type='class' thresholding", {
+  fit <- structure(
+    list(
+      pred_y = matrix(c(0.2, 0.5, 0.51, 0.8, 0.49, 0.75, 0.1, 0.95, 0.65, 0.35, 0.55, 0.45), ncol = 1),
+      cutoff = 0.5,
+      stop_reason = "max_iter"
+    ),
+    class = "xplus"
+  )
+  y <- c(0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0)
 
-  fit <- xplus(x, y, max_iter = 5)
+  pred_prob <- predict(fit, type = "response")
+  # With cutoff = 0.5, values > 0.5 map to class 1 and <= 0.5 to class 0.
+  manual_class <- as.integer(pred_prob > fit$cutoff)
+  # predict(type = "class") returns factor(FALSE, TRUE); convert to 0/1.
+  pred_class <- as.integer(predict(fit, type = "class")) - 1
+  manual_error <- mean(manual_class != y)
 
-  # Get predictions from predict
-  pred_class <- predict(fit, newx = x, type = "class")
-  pred_prob <- predict(fit, newx = x, type = "response")
-
-  # Calculate classification error using predict's threshold
-  # predict uses: as.factor(prob > object$cutoff)
-  # So class 1 when prob > cutoff, class 0 when prob <= cutoff
-  # Error is when prediction doesn't match true label
-  manual_pred <- as.integer(pred_prob > fit$cutoff)
-  manual_error <- mean(manual_pred != y)
-
-  # Get assess class metric
-  out <- assess(fit, newx = x, newy = y)
-  assess_error <- out$class
-
-  # They should match because both use the same cutoff
-  expect_equal(assess_error, manual_error, tolerance = 1e-10)
+  expect_equal(pred_class, manual_class)
+  expect_equal(assess(fit, newy = y)$class, manual_error, tolerance = 1e-10)
 })
-
