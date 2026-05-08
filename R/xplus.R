@@ -135,23 +135,21 @@ xplus <- function(
     }
 
     pred_y <- 1 / (1 + exp(-10 * map_pred_y))
-    if (identical(iterative_path, "continuous_enhancement")) {
-      label_sample_id_old <- pseudo_labels[unlabeled_id]
-      pseudo_labels[unlabeled_id] <- pred_y[unlabeled_id] * learning_rate + (1 - learning_rate) * pseudo_labels[unlabeled_id]
-      y[unlabeled_id] <- as.integer(pseudo_labels[unlabeled_id] >= pseudo_label_cutoff)
-      label_sample_id_new <- pseudo_labels[unlabeled_id]
-      label_delta <- abs(label_sample_id_old - label_sample_id_new)
-    } else {
-      label_sample_id_old <- pseudo_labels[sample_id]
-      pseudo_labels[sample_id] <- pred_y[sample_id] * learning_rate + (1 - learning_rate) * pseudo_labels[sample_id]
+    update_id <- if (identical(iterative_path, "continuous_enhancement")) unlabeled_id else sample_id
+    label_sample_id_old <- pseudo_labels[update_id]
 
-      y[sample_id] <- stats::rbinom(length(sample_id), 1, pseudo_labels[sample_id])
-      label_sample_id_new <- pseudo_labels[sample_id]
-      label_delta <- abs(label_sample_id_old - label_sample_id_new)
+    if (identical(iterative_path, "continuous_enhancement")) {
+      pseudo_labels[update_id] <- pred_y[update_id] * learning_rate + (1 - learning_rate) * pseudo_labels[update_id]
+      y[unlabeled_id] <- as.integer(pseudo_labels[unlabeled_id] >= pseudo_label_cutoff)
+    } else {
+      pseudo_labels[update_id] <- pred_y[update_id] * learning_rate + (1 - learning_rate) * pseudo_labels[update_id]
+
+      y[update_id] <- stats::rbinom(length(update_id), 1, pseudo_labels[update_id])
     }
 
-    # Stabilization score is derived from soft-label movement magnitude.
-    unchanged <- 1 - mean(pmin(label_delta, 1))
+    label_delta <- abs(label_sample_id_old - pseudo_labels[update_id])
+    # Pseudo-labels are probabilities in [0, 1], so mean absolute movement is in [0, 1].
+    unchanged <- 1 - mean(label_delta)
 
     prob_chosen[prob_chosen <= 0] <- 0
     change_proportion <- c(change_proportion[-1], unchanged)
