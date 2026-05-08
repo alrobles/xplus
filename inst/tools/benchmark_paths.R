@@ -43,6 +43,17 @@ calculate_sparsity <- function(support_size, n_features) {
   1 - (support_size / n_features)
 }
 
+encode_support <- function(support) {
+  paste(support, collapse = ";")
+}
+
+decode_support <- function(value) {
+  if (identical(value, "")) {
+    return(integer(0))
+  }
+  as.integer(strsplit(value, ";", fixed = TRUE)[[1]])
+}
+
 support_stability_score <- function(support_sets) {
   n <- length(support_sets)
   if (n < 2) {
@@ -88,7 +99,7 @@ run_single_path_seed <- function(x, y, path_name, seed, args) {
     sparsity = sparsity,
     n_iter = fit$n_iter,
     runtime_seconds = unname(fit_time[["elapsed"]]),
-    support = paste(support, collapse = ";"),
+    support = encode_support(support),
     stringsAsFactors = FALSE
   )
 }
@@ -97,9 +108,7 @@ summarize_runs <- function(run_df) {
   paths <- unique(run_df$path)
   rows <- lapply(paths, function(path_name) {
     path_runs <- run_df[run_df$path == path_name, , drop = FALSE]
-    support_sets <- lapply(path_runs$support, function(s) {
-      if (identical(s, "")) integer(0) else as.integer(strsplit(s, ";", fixed = TRUE)[[1]])
-    })
+    support_sets <- lapply(path_runs$support, decode_support)
 
     data.frame(
       path = path_name,
@@ -166,6 +175,7 @@ write_markdown_table <- function(summary_df, seeds, output_file) {
     "Stability under fixed seeds is summarized by AUC/class error standard deviations and support_jaccard_mean."
   )
 
+  # Keep byte-level write behavior stable across locales/viewers.
   writeLines(lines, con = output_file, useBytes = TRUE)
 }
 
