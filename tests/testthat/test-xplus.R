@@ -9,6 +9,8 @@ test_that("xplus runs and returns xplus class", {
   expect_s3_class(fit, "xplus")
   expect_true(inherits(fit$xplus, "cv.glmnet"))
   expect_equal(nrow(fit$pred_y), nrow(x))
+  expect_equal(length(fit$pseudo_labels), nrow(x))
+  expect_equal(fit$iterative_path, "current")
   expect_true(fit$stop_reason %in% c("max_iter", "label_stability", "budget_exhausted"))
 })
 
@@ -42,6 +44,36 @@ test_that("xplus can stop on early label stability", {
   )
 
   expect_equal(fit$n_iter, 1)
+  expect_equal(fit$iterative_path, "continuous_enhancement")
+  expect_equal(summary(fit)$iterative_path, "continuous_enhancement")
+})
+
+test_that("continuous enhancement path keeps pseudo-labels continuous", {
+  skip_if_not_installed("glmnet")
+  set.seed(321)
+  x <- matrix(rnorm(100 * 5), ncol = 5)
+  y <- c(rep(1, 25), rep(0, 75))
+
+  fit <- xplus(x, y, learning_rate = 0.5, max_iter = 3, seed = 321)
+
+  expect_equal(fit$iterative_path, "continuous_enhancement")
+  expect_true(all(fit$pseudo_labels >= 0 & fit$pseudo_labels <= 1))
+  expect_true(any(fit$pseudo_labels[y == 0] > 0 & fit$pseudo_labels[y == 0] < 1))
+})
+
+test_that("continuous enhancement path is reproducible with fixed seed", {
+  skip_if_not_installed("glmnet")
+  set.seed(654)
+  x <- matrix(rnorm(100 * 5), ncol = 5)
+  y <- c(rep(1, 25), rep(0, 75))
+
+  fit_a <- xplus(x, y, learning_rate = 0.5, max_iter = 3, seed = 999)
+  fit_b <- xplus(x, y, learning_rate = 0.5, max_iter = 3, seed = 999)
+
+  expect_equal(fit_a$iterative_path, "continuous_enhancement")
+  expect_equal(fit_a$pseudo_labels, fit_b$pseudo_labels)
+  expect_equal(fit_a$y, fit_b$y)
+  expect_equal(fit_a$n_iter, fit_b$n_iter)
 })
 
 test_that("final refit passes alpha = 0 (ridge) to cv.glmnet", {

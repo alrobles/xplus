@@ -9,6 +9,8 @@
 #' @param y Final relabeled response vector.
 #' @param alpha Elastic-net alpha used during fitting.
 #' @param learning_rate Learning rate used during pseudo-label updates.
+#' @param pseudo_labels Final pseudo-label probabilities.
+#' @param iterative_path Internal iterative path used for pseudo-label updates.
 #' @param qq Quantile parameter used for cutoff calibration.
 #' @param call Original function call.
 #' @param max_iter Maximum number of iterations configured for fitting.
@@ -32,6 +34,8 @@ new_xplus <- function(
   y = integer(),
   alpha = numeric(),
   learning_rate = numeric(),
+  pseudo_labels = numeric(),
+  iterative_path = character(),
   qq = numeric(),
   call = character(),
   max_iter = integer(),
@@ -51,6 +55,8 @@ new_xplus <- function(
       y = y,
       alpha = alpha,
       learning_rate = learning_rate,
+      pseudo_labels = pseudo_labels,
+      iterative_path = as.character(iterative_path),
       qq = qq,
       call = call,
       max_iter = max_iter,

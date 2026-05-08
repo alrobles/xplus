@@ -23,6 +23,7 @@ summary.xplus <- function(object, ...) {
     cutoff = object$cutoff,
     alpha = object$alpha,
     learning_rate = object$learning_rate,
+    iterative_path = object$iterative_path,
     qq = object$qq,
     lambda_min = object$xplus$lambda.min,
     lambda_1se = object$xplus$lambda.1se,
