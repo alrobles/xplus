@@ -9,7 +9,7 @@
 #' obj <- new_xplus(fit_xplus = fit, pred_y = matrix(0.5, 10, 1), cutoff = 0.5)
 #' validate_xplus(obj)
 #' }
-#' @export
+#' @keywords internal
 validate_xplus <- function(xplus_object) {
   stopifnot(inherits(xplus_object, "xplus"))
   values <- unclass(xplus_object)
