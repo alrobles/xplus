@@ -84,3 +84,95 @@ test_that("final refit alpha is stored and consistent for alpha = 0.5", {
   expect_s3_class(fit, "xplus")
   expect_true(inherits(fit$xplus, "cv.glmnet"))
 })
+
+# Input validation tests
+
+test_that("xplus rejects x with NA values", {
+  skip_if_not_installed("glmnet")
+  x <- matrix(rnorm(100 * 5), ncol = 5)
+  x[1, 1] <- NA
+  y <- c(rep(1, 25), rep(0, 75))
+
+  expect_error(
+    xplus(x, y, max_iter = 2),
+    "`x` must not contain NA values.",
+    fixed = TRUE
+  )
+})
+
+test_that("xplus rejects x with Inf values", {
+  skip_if_not_installed("glmnet")
+  x <- matrix(rnorm(100 * 5), ncol = 5)
+  x[2, 3] <- Inf
+  y <- c(rep(1, 25), rep(0, 75))
+
+  expect_error(
+    xplus(x, y, max_iter = 2),
+    "`x` must not contain Inf values.",
+    fixed = TRUE
+  )
+})
+
+test_that("xplus rejects x with -Inf values", {
+  skip_if_not_installed("glmnet")
+  x <- matrix(rnorm(100 * 5), ncol = 5)
+  x[5, 2] <- -Inf
+  y <- c(rep(1, 25), rep(0, 75))
+
+  expect_error(
+    xplus(x, y, max_iter = 2),
+    "`x` must not contain Inf values.",
+    fixed = TRUE
+  )
+})
+
+test_that("xplus rejects non-integer-like sample_use_time", {
+  skip_if_not_installed("glmnet")
+  x <- matrix(rnorm(100 * 5), ncol = 5)
+  y <- c(rep(1, 25), rep(0, 75))
+
+  expect_error(
+    xplus(x, y, sample_use_time = 30.5, max_iter = 2),
+    "`sample_use_time` must be an integer-like value.",
+    fixed = TRUE
+  )
+})
+
+test_that("xplus accepts integer-like sample_use_time as numeric", {
+  skip_if_not_installed("glmnet")
+  set.seed(42)
+  x <- matrix(rnorm(100 * 5), ncol = 5)
+  y <- c(rep(1, 25), rep(0, 75))
+
+  # Should work with integer-like numeric values
+  fit <- xplus(x, y, sample_use_time = 30.0, max_iter = 2, seed = 42)
+  expect_s3_class(fit, "xplus")
+})
+
+test_that("xplus warns on near-degenerate positive threshold", {
+  skip_if_not_installed("glmnet")
+  set.seed(123)
+  # Create data where predictions will be very close to cutoff
+  x <- matrix(runif(100 * 5, min = -1e-8, max = 1e-8), ncol = 5)
+  y <- c(rep(1, 25), rep(0, 75))
+
+  expect_warning(
+    xplus(x, y, max_iter = 1, seed = 123),
+    "Near-degenerate threshold detected.*max positive residual is very small",
+    perl = TRUE
+  )
+})
+
+test_that("xplus warns on near-degenerate negative threshold", {
+  skip_if_not_installed("glmnet")
+  set.seed(456)
+  # Create data where predictions will be very close to cutoff
+  x <- matrix(runif(100 * 5, min = -1e-8, max = 1e-8), ncol = 5)
+  y <- c(rep(1, 25), rep(0, 75))
+
+  expect_warning(
+    xplus(x, y, max_iter = 1, seed = 456),
+    "Near-degenerate threshold detected.*max negative residual is very small",
+    perl = TRUE
+  )
+})
