@@ -140,7 +140,7 @@ xplus <- function(
     pseudo_labels[update_indices] <- pred_y[update_indices] * learning_rate + (1 - learning_rate) * pseudo_labels[update_indices]
 
     if (identical(iterative_path, "continuous_enhancement")) {
-      y[unlabeled_id] <- as.integer(pseudo_labels[unlabeled_id] >= pseudo_label_cutoff)
+      y[update_indices] <- as.integer(pseudo_labels[update_indices] >= pseudo_label_cutoff)
     } else {
       y[update_indices] <- stats::rbinom(length(update_indices), 1, pseudo_labels[update_indices])
     }
