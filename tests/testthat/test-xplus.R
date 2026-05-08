@@ -202,27 +202,115 @@ test_that("xplus accepts integer-like sample_use_time as numeric", {
   expect_s3_class(fit, "xplus")
 })
 
-test_that("xplus handles near-degenerate positive threshold", {
+# --- normalize_residuals() unit tests ---
+
+test_that("normalize_residuals normalizes positive residuals to [0, 1]", {
+  v <- c(-0.5, 0, 0.2, 0.4, 0.8)
+  out <- xplus:::normalize_residuals(v)
+  # Positive side scaled so max == 1
+  expect_equal(max(out[out > 0]), 1)
+  # Negative side scaled so min == -1
+  expect_equal(min(out[out < 0]), -1)
+  # Zero unchanged
+  expect_equal(out[v == 0], 0)
+})
+
+test_that("normalize_residuals normalizes negative residuals to [-1, 0]", {
+  v <- c(-0.9, -0.3, 0, 0.1)
+  out <- xplus:::normalize_residuals(v)
+  expect_equal(min(out[out < 0]), -1)
+  expect_equal(max(out[out > 0]), 1)
+})
+
+test_that("normalize_residuals: near-degenerate positive residuals are clamped to 0 with a warning", {
+  # All positive residuals are below 1e-6
+  v <- c(-0.5, 5e-8, 9e-7)
+  expect_warning(
+    out <- xplus:::normalize_residuals(v),
+    regexp = "Near-degenerate positive scaling detected"
+  )
+  # Clamped-to-0 residuals yield 0 (sigmoid -> 0.5 neutral prediction)
+  expect_equal(out[v > 0], c(0, 0))
+  # Negative side still normalised normally
+  expect_equal(min(out[out < 0]), -1)
+})
+
+test_that("normalize_residuals: near-degenerate negative residuals are clamped to 0 with a warning", {
+  # All negative residuals are below 1e-6 in magnitude
+  v <- c(-9e-7, -5e-8, 0.5)
+  expect_warning(
+    out <- xplus:::normalize_residuals(v),
+    regexp = "Near-degenerate negative scaling detected"
+  )
+  # Clamped-to-0
+  expect_equal(out[v < 0], c(0, 0))
+  # Positive side still normalised normally
+  expect_equal(max(out[out > 0]), 1)
+})
+
+test_that("normalize_residuals warning message includes the residual value", {
+  v <- c(-0.5, 3e-8)
+  expect_warning(
+    xplus:::normalize_residuals(v),
+    regexp = "3.00e-08"
+  )
+})
+
+test_that("normalize_residuals: all-zero input is returned unchanged without warning", {
+  v <- c(0, 0, 0)
+  expect_no_warning(out <- xplus:::normalize_residuals(v))
+  expect_equal(out, v)
+})
+
+test_that("normalize_residuals: all-positive input normalised so max == 1", {
+  v <- c(0.1, 0.3, 0.6)
+  out <- xplus:::normalize_residuals(v)
+  expect_equal(max(out), 1)
+  expect_true(all(out >= 0))
+})
+
+test_that("normalize_residuals: all-negative input normalised so min == -1", {
+  v <- c(-0.8, -0.4, -0.1)
+  out <- xplus:::normalize_residuals(v)
+  expect_equal(min(out), -1)
+  expect_true(all(out <= 0))
+})
+
+test_that("normalize_residuals: degenerate positive clamping is deterministic (same output for same input)", {
+  v <- c(-0.3, 1e-8, 2e-8)
+  # Suppress the warning and check determinism
+  out1 <- suppressWarnings(xplus:::normalize_residuals(v))
+  out2 <- suppressWarnings(xplus:::normalize_residuals(v))
+  expect_equal(out1, out2)
+  # Clamped values are exactly 0
+  expect_equal(out1[v > 0], c(0, 0))
+})
+
+# --- integration tests: xplus() with near-degenerate data ---
+
+test_that("xplus completes and warns on near-degenerate positive threshold", {
   skip_if_not_installed("glmnet")
   set.seed(123)
-  # Create data where predictions will be very close to cutoff
   x <- matrix(runif(100 * 5, min = -1e-8, max = 1e-8), ncol = 5)
   y <- c(rep(1, 25), rep(0, 75))
 
-  # Should complete without error even if data is degenerate
-  fit <- xplus(x, y, max_iter = 1, seed = 123)
+  expect_warning(
+    fit <- xplus(x, y, max_iter = 1, seed = 123),
+    regexp = "Near-degenerate"
+  )
   expect_s3_class(fit, "xplus")
 })
 
-test_that("xplus handles near-degenerate negative threshold", {
+test_that("xplus completes and warns on near-degenerate negative threshold", {
   skip_if_not_installed("glmnet")
   set.seed(456)
-  # Create data where predictions will be very close to cutoff
   x <- matrix(runif(100 * 5, min = -1e-8, max = 1e-8), ncol = 5)
   y <- c(rep(1, 25), rep(0, 75))
 
-  # Should complete without error even if data is degenerate
-  fit <- xplus(x, y, max_iter = 1, seed = 456)
+  expect_warning(
+    fit <- xplus(x, y, max_iter = 1, seed = 456),
+    regexp = "Near-degenerate"
+  )
   expect_s3_class(fit, "xplus")
 })
 

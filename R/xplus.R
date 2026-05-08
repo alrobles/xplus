@@ -105,34 +105,7 @@ xplus <- function(
     cutoff <- stats::quantile(pred_y[positive_id], qq)
     map_pred_y <- pred_y - cutoff
 
-    if (any(map_pred_y > 0)) {
-      max_pos <- max(map_pred_y[map_pred_y > 0])
-      if (max_pos < degenerate_threshold) {
-        warning(
-          sprintf(
-            "Near-degenerate positive scaling detected (max residual=%.2e, approaching numerical precision limits).",
-            max_pos
-          ),
-          call. = FALSE
-        )
-      } else {
-        map_pred_y[map_pred_y > 0] <- map_pred_y[map_pred_y > 0] / max_pos
-      }
-    }
-    if (any(map_pred_y < 0)) {
-      min_neg <- abs(min(map_pred_y[map_pred_y < 0]))
-      if (min_neg < degenerate_threshold) {
-        warning(
-          sprintf(
-            "Near-degenerate negative scaling detected (min residual=%.2e, approaching numerical precision limits).",
-            min_neg
-          ),
-          call. = FALSE
-        )
-      } else {
-        map_pred_y[map_pred_y < 0] <- map_pred_y[map_pred_y < 0] / min_neg
-      }
-    }
+    map_pred_y <- normalize_residuals(map_pred_y, degenerate_threshold)
 
     pred_y <- 1 / (1 + exp(-10 * map_pred_y))
     update_indices <- if (identical(iterative_path, "continuous_enhancement")) unlabeled_id else sample_id
