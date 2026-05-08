@@ -50,9 +50,12 @@ xplus <- function(
 
   if (!is.matrix(x)) stop("`x` must be a matrix.", call. = FALSE)
   if (nrow(x) != length(y)) stop("`x` and `y` must have matching dimensions.", call. = FALSE)
+  if (anyNA(x)) stop("`x` must not contain NA values.", call. = FALSE)
+  if (any(is.infinite(x))) stop("`x` must not contain Inf values.", call. = FALSE)
   if (!all(y %in% c(0, 1))) stop("`y` must contain only 0 and 1.", call. = FALSE)
   if (!is.numeric(alpha) || length(alpha) != 1) stop("`alpha` must be a scalar numeric value.", call. = FALSE)
   if (!is.numeric(sample_use_time) || sample_use_time <= 0) stop("`sample_use_time` must be > 0.", call. = FALSE)
+  if (sample_use_time != round(sample_use_time)) stop("`sample_use_time` must be an integer-like value.", call. = FALSE)
   if (!is.numeric(learning_rate) || learning_rate < 0 || learning_rate > 1) stop("`learning_rate` must be in [0, 1].", call. = FALSE)
   if (!is.numeric(qq) || qq < 0 || qq > 1) stop("`qq` must be in [0, 1].", call. = FALSE)
   if (!is.numeric(nfolds) || nfolds < 2) stop("`nfolds` must be >= 2.", call. = FALSE)
@@ -73,7 +76,11 @@ xplus <- function(
   prob_chosen <- rep(1, length(unlabeled_id))
   names(prob_chosen) <- unlabeled_id
   change_proportion <- rep(0, 5)
+  # Residuals below this threshold are effectively at numerical precision.
+  degenerate_threshold <- 1e-6
   n_iter <- 0
+  # If no early stopping condition triggers, fitting stops at max_iter.
+  stop_reason <- "max_iter"
 
   for (i in seq_len(max_iter)) {
     sample_id <- sample(unlabeled_id, length(positive_id), replace = TRUE, prob = prob_chosen)
@@ -96,10 +103,32 @@ xplus <- function(
     map_pred_y <- pred_y - cutoff
 
     if (any(map_pred_y > 0)) {
-      map_pred_y[map_pred_y > 0] <- map_pred_y[map_pred_y > 0] / max(map_pred_y[map_pred_y > 0])
+      max_pos <- max(map_pred_y[map_pred_y > 0])
+      if (max_pos < degenerate_threshold) {
+        warning(
+          sprintf(
+            "Near-degenerate positive scaling detected (max residual=%.2e, approaching numerical precision limits).",
+            max_pos
+          ),
+          call. = FALSE
+        )
+      } else {
+        map_pred_y[map_pred_y > 0] <- map_pred_y[map_pred_y > 0] / max_pos
+      }
     }
     if (any(map_pred_y < 0)) {
-      map_pred_y[map_pred_y < 0] <- map_pred_y[map_pred_y < 0] / abs(min(map_pred_y[map_pred_y < 0]))
+      min_neg <- abs(min(map_pred_y[map_pred_y < 0]))
+      if (min_neg < degenerate_threshold) {
+        warning(
+          sprintf(
+            "Near-degenerate negative scaling detected (min residual=%.2e, approaching numerical precision limits).",
+            min_neg
+          ),
+          call. = FALSE
+        )
+      } else {
+        map_pred_y[map_pred_y < 0] <- map_pred_y[map_pred_y < 0] / min_neg
+      }
     }
 
     pred_y <- 1 / (1 + exp(-10 * map_pred_y))
@@ -120,16 +149,18 @@ xplus <- function(
 
     if (sum(prob_chosen <= 0.01) > (convergence_threshold * length(prob_chosen))) {
       if (isTRUE(verbose)) message("Stopping: sampling budget exhausted.")
+      stop_reason <- "budget_exhausted"
       break
     }
 
     if (mean(change_proportion) > convergence_threshold) {
       if (isTRUE(verbose)) message("Stopping: label stability reached.")
+      stop_reason <- "label_stability"
       break
     }
   }
 
-  fit_pi <- glmnet::cv.glmnet(x, y, family = "binomial")
+  fit_pi <- glmnet::cv.glmnet(x, y, family = "binomial", alpha = alpha, nfolds = nfolds)
   pred_y <- stats::predict(fit_pi, newx = x, s = "lambda.min", type = "response")
   cutoff <- stats::quantile(pred_y[positive_id], qq)
   pred_coef1 <- glmnet::coef.glmnet(fit_pi, s = "lambda.min")
@@ -145,6 +176,7 @@ xplus <- function(
     alpha = alpha,
     learning_rate = learning_rate,
     qq = qq,
+    stop_reason = stop_reason,
     max_iter = max_iter,
     call = this.call
   )
