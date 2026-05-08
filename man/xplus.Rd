@@ -25,9 +25,12 @@ xplus(
 
 \item{alpha}{Elastic-net mixing parameter passed to \code{\link[glmnet:cv.glmnet]{glmnet::cv.glmnet()}}.}
 
-\item{sample_use_time}{Number of times each unlabeled sample can be selected before its sampling probability reaches zero.}
+\item{sample_use_time}{Package extension controlling the unlabeled-sampling budget:
+number of times each unlabeled sample can be selected before its sampling
+probability reaches zero.}
 
-\item{learning_rate}{Learning-rate for pseudo-label updates in \verb{[0, 1]}.}
+\item{learning_rate}{Package extension controlling pseudo-label smoothing in
+\verb{[0, 1]}.}
 
 \item{qq}{Quantile used to define the positive-reference cutoff.}
 
@@ -48,11 +51,24 @@ An object of class \code{"xplus"}.
 Fit the PLUS algorithm for positive-unlabeled learning.
 }
 \details{
-The PLUS algorithm alternates between fitting penalized logistic models on known positives
-and sampled unlabeled cases, then updating unlabeled pseudo-labels from calibrated
-probabilities. Convergence is reached when soft-label movement stabilizes above
-\code{convergence_threshold} (as a rolling mean stabilization score) or the
-sampling budget is consumed.
+Core PLUS behavior alternates between fitting penalized logistic models on known
+positives plus sampled unlabeled cases, calibrating predictions with a positive
+quantile cutoff, and iteratively relabeling unlabeled samples.
+
+\code{xplus} also provides package-specific extensions in the
+\code{"continuous_enhancement"} path (\code{learning_rate < 1}):
+\itemize{
+\item pseudo-label smoothing via \code{learning_rate}
+\item global unlabeled updates each iteration (instead of only sampled cases)
+\item practical stopping heuristics based on a rolling soft-label stabilization
+score and unlabeled-sampling budget exhaustion (\code{sample_use_time})
+}
+
+User-facing semantics are:
+\itemize{
+\item \code{learning_rate = 1} keeps the \code{"current"} path behavior
+\item \code{learning_rate < 1} enables the \code{"continuous_enhancement"} extensions
+}
 }
 \examples{
 set.seed(1)

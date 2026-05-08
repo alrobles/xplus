@@ -5,8 +5,11 @@
 #' @param x Numeric feature matrix.
 #' @param y Binary vector where `1` indicates known positives and `0` indicates unlabeled samples.
 #' @param alpha Elastic-net mixing parameter passed to [glmnet::cv.glmnet()].
-#' @param sample_use_time Number of times each unlabeled sample can be selected before its sampling probability reaches zero.
-#' @param learning_rate Learning-rate for pseudo-label updates in `[0, 1]`.
+#' @param sample_use_time Package extension controlling the unlabeled-sampling budget:
+#'   number of times each unlabeled sample can be selected before its sampling
+#'   probability reaches zero.
+#' @param learning_rate Package extension controlling pseudo-label smoothing in
+#'   `[0, 1]`.
 #' @param qq Quantile used to define the positive-reference cutoff.
 #' @param verbose Logical; print iterative progress messages.
 #' @param nfolds Number of CV folds used in the iterative fit.
@@ -15,11 +18,20 @@
 #' @param seed Optional random seed for reproducibility.
 #'
 #' @details
-#' The PLUS algorithm alternates between fitting penalized logistic models on known positives
-#' and sampled unlabeled cases, then updating unlabeled pseudo-labels from calibrated
-#' probabilities. Convergence is reached when soft-label movement stabilizes above
-#' `convergence_threshold` (as a rolling mean stabilization score) or the
-#' sampling budget is consumed.
+#' Core PLUS behavior alternates between fitting penalized logistic models on known
+#' positives plus sampled unlabeled cases, calibrating predictions with a positive
+#' quantile cutoff, and iteratively relabeling unlabeled samples.
+#'
+#' `xplus` also provides package-specific extensions in the
+#' `"continuous_enhancement"` path (`learning_rate < 1`):
+#' - pseudo-label smoothing via `learning_rate`
+#' - global unlabeled updates each iteration (instead of only sampled cases)
+#' - practical stopping heuristics based on a rolling soft-label stabilization
+#'   score and unlabeled-sampling budget exhaustion (`sample_use_time`)
+#'
+#' User-facing semantics are:
+#' - `learning_rate = 1` keeps the `"current"` path behavior
+#' - `learning_rate < 1` enables the `"continuous_enhancement"` extensions
 #'
 #' @return An object of class `"xplus"`.
 #' @references Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
