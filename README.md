@@ -30,12 +30,21 @@ assess(fit, newx = x, newy = y)
 
 ## Algorithm summary
 
+### Core PLUS behavior
+
 1. Sample unlabeled cases and fit penalized logistic regression.
 2. Predict probabilities for all samples.
 3. Rescale probabilities using a quantile cutoff from known positives.
-4. Update pseudo-labels by Bernoulli sampling with a learning rate.
-5. Stop when labels stabilize or sampling budget is exhausted.
-6. Refit final model with relabeled data.
+4. Iteratively relabel unlabeled cases.
+5. Refit a final model with pseudo-label targets.
+
+### Package-specific extensions in `continuous_enhancement` (`learning_rate < 1`)
+
+- **Learning-rate smoothing** (`learning_rate`): pseudo-labels are updated as a convex combination of old and new values.
+- **Sampling budget** (`sample_use_time`): each unlabeled case has a finite sampling budget.
+- **Practical convergence heuristics** (`convergence_threshold`): stop when rolling soft-label stabilization is high enough or when the sampling budget is exhausted.
+
+With `learning_rate = 1`, `xplus` keeps the `"current"` path behavior.
 
 ## Reproducible path comparison harness
 

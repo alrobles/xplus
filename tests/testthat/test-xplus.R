@@ -82,6 +82,22 @@ test_that("continuous enhancement path keeps pseudo-labels continuous", {
   expect_true(any(fit$pseudo_labels[y == 0] > 0 & fit$pseudo_labels[y == 0] < 1))
 })
 
+test_that("continuous enhancement extensions update all unlabeled pseudo-labels", {
+  skip_if_not_installed("glmnet")
+  set.seed(777)
+  x <- matrix(rnorm(100 * 5), ncol = 5)
+  y <- c(rep(1, 25), rep(0, 75))
+  unlabeled <- y == 0
+
+  fit_current <- xplus(x, y, learning_rate = 1, max_iter = 1, convergence_threshold = 1, seed = 777)
+  fit_enhanced <- xplus(x, y, learning_rate = 0.5, max_iter = 1, convergence_threshold = 1, seed = 777)
+
+  expect_equal(fit_current$iterative_path, "current")
+  expect_equal(fit_enhanced$iterative_path, "continuous_enhancement")
+  expect_true(any(fit_current$pseudo_labels[unlabeled] == 0))
+  expect_true(all(fit_enhanced$pseudo_labels[unlabeled] > 0))
+})
+
 test_that("continuous enhancement path is reproducible with fixed seed", {
   skip_if_not_installed("glmnet")
   set.seed(654)
