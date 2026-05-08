@@ -1,13 +1,16 @@
-test_that("benchmark harness returns required comparison metrics", {
-  skip_if_not_installed("glmnet")
-
+benchmark_harness_path <- function() {
   harness_path <- system.file("tools", "benchmark_paths.R", package = "xplus")
   if (identical(harness_path, "")) {
     harness_path <- testthat::test_path("../../inst/tools/benchmark_paths.R")
   }
+  harness_path
+}
+
+test_that("benchmark harness returns required comparison metrics", {
+  skip_if_not_installed("glmnet")
 
   harness <- new.env(parent = globalenv())
-  sys.source(harness_path, envir = harness)
+  sys.source(benchmark_harness_path(), envir = harness)
 
   set.seed(123)
   x <- matrix(rnorm(80 * 4), ncol = 4)
@@ -55,13 +58,8 @@ test_that("benchmark harness returns required comparison metrics", {
 test_that("benchmark harness is stable under fixed seeds for decision metrics", {
   skip_if_not_installed("glmnet")
 
-  harness_path <- system.file("tools", "benchmark_paths.R", package = "xplus")
-  if (identical(harness_path, "")) {
-    harness_path <- testthat::test_path("../../inst/tools/benchmark_paths.R")
-  }
-
   harness <- new.env(parent = globalenv())
-  sys.source(harness_path, envir = harness)
+  sys.source(benchmark_harness_path(), envir = harness)
 
   set.seed(99)
   x <- matrix(rnorm(80 * 4), ncol = 4)

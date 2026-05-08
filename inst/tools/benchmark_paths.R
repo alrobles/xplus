@@ -19,8 +19,7 @@ default_path_specs <- function(max_iter = 30, nfolds = 4) {
 }
 
 default_benchmark_inputs <- function() {
-  if (exists("fit_xplus_example", inherits = TRUE)) {
-  } else {
+  if (!exists("fit_xplus_example", inherits = TRUE)) {
     data("fit_xplus_example", package = "xplus", envir = environment())
   }
   fit <- get("fit_xplus_example", inherits = TRUE)
@@ -113,7 +112,7 @@ summarize_runs <- function(run_df) {
 }
 
 write_markdown_table <- function(summary_df, seeds, output_file) {
-  digits <- 6
+  digits <- 3
 
   lines <- c(
     "# xplus path comparison",
@@ -128,9 +127,9 @@ write_markdown_table <- function(summary_df, seeds, output_file) {
     row <- summary_df[i, , drop = FALSE]
     fmt <- function(mean_col, sd_col) {
       paste0(
-        format(round(row[[mean_col]], digits), nsmall = 3, trim = TRUE),
+        format(round(row[[mean_col]], digits), nsmall = digits, trim = TRUE),
         " ± ",
-        format(round(row[[sd_col]], digits), nsmall = 3, trim = TRUE)
+        format(round(row[[sd_col]], digits), nsmall = digits, trim = TRUE)
       )
     }
     lines <- c(
@@ -143,7 +142,7 @@ write_markdown_table <- function(summary_df, seeds, output_file) {
         " | ", fmt("sparsity_mean", "sparsity_sd"),
         " | ", fmt("n_iter_mean", "n_iter_sd"),
         " | ", fmt("runtime_seconds_mean", "runtime_seconds_sd"),
-        " | ", format(round(row[["support_jaccard_mean"]], digits), nsmall = 3, trim = TRUE),
+        " | ", format(round(row[["support_jaccard_mean"]], digits), nsmall = digits, trim = TRUE),
         " |"
       )
     )
