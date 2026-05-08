@@ -14,7 +14,8 @@ xplus(
   verbose = FALSE,
   nfolds = 4,
   max_iter = 10000,
-  convergence_threshold = 0.9
+  convergence_threshold = 0.9,
+  seed = NULL
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ xplus(
 \item{max_iter}{Maximum number of pseudo-labeling iterations.}
 
 \item{convergence_threshold}{Proportion threshold for label stability and sampling exhaustion checks.}
+
+\item{seed}{Optional random seed for reproducibility.}
 }
 \value{
 An object of class \code{"xplus"}.
