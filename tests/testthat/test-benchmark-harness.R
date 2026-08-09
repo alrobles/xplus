@@ -16,7 +16,7 @@ test_that("benchmark harness returns required comparison metrics", {
   x <- matrix(rnorm(80 * 4), ncol = 4)
   y <- c(rep(1, 20), rep(0, 60))
 
-  path_specs <- harness$default_path_specs(max_iter = 3, nfolds = 2)
+  path_specs <- harness$default_path_specs(max_iter = 3, nfolds = 4)
   output_dir <- file.path(tempdir(), "xplus-benchmark-output")
   on.exit(unlink(output_dir, recursive = TRUE), add = TRUE)
 
@@ -65,7 +65,7 @@ test_that("benchmark harness is stable under fixed seeds for decision metrics", 
   set.seed(99)
   x <- matrix(rnorm(80 * 4), ncol = 4)
   y <- c(rep(1, 20), rep(0, 60))
-  path_specs <- harness$default_path_specs(max_iter = 2, nfolds = 2)
+  path_specs <- harness$default_path_specs(max_iter = 2, nfolds = 4)
 
   run_a <- harness$run_xplus_path_benchmark(
     x = x,

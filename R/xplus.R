@@ -89,7 +89,7 @@ xplus <- function(
   iterative_path <- if (learning_rate < 1) "continuous_enhancement" else "current"
   prob_chosen <- rep(1, length(unlabeled_id))
   names(prob_chosen) <- unlabeled_id
-  change_proportion <- rep(0, 5)
+  change_proportion <- rep(NA_real_, 5)
   # Residuals below this threshold are effectively at numerical precision.
   degenerate_threshold <- 1e-6
   pseudo_label_cutoff <- 0.5
@@ -98,13 +98,25 @@ xplus <- function(
   stop_reason <- "max_iter"
 
   for (i in seq_len(max_iter)) {
+    if (all(prob_chosen <= 0)) {
+      if (isTRUE(verbose)) message("Stopping: sampling budget exhausted.")
+      stop_reason <- "budget_exhausted"
+      break
+    }
     sample_id <- sample(unlabeled_id, length(positive_id), replace = TRUE, prob = prob_chosen)
     sample_id <- unique(sample_id)
-    prob_chosen[as.character(sample_id)] <- prob_chosen[as.character(sample_id)] - (1 / sample_use_time)
+    prob_chosen[as.character(sample_id)] <- pmax(prob_chosen[as.character(sample_id)] - (1 / sample_use_time), 0)
+
+    fit_id <- c(positive_id, sample_id)
+    if (length(unique(y[fit_id])) < 2) {
+      if (isTRUE(verbose)) message("Stopping: pseudo-labels collapsed to a single class.")
+      stop_reason <- "degenerate_labels"
+      break
+    }
 
     fit_pi <- glmnet::cv.glmnet(
-      x = x[c(positive_id, sample_id), , drop = FALSE],
-      y = y[c(positive_id, sample_id)],
+      x = x[fit_id, , drop = FALSE],
+      y = y[fit_id],
       alpha = alpha,
       type.measure = "auc",
       nfolds = nfolds,
@@ -148,14 +160,22 @@ xplus <- function(
       break
     }
 
-    if (mean(change_proportion) > convergence_threshold) {
+    if (mean(change_proportion, na.rm = TRUE) > convergence_threshold) {
       if (isTRUE(verbose)) message("Stopping: label stability reached.")
       stop_reason <- "label_stability"
       break
     }
   }
 
-  fit_pi <- glmnet::cv.glmnet(x, pseudo_labels, family = "binomial", alpha = alpha, nfolds = nfolds)
+  # Soft pseudo-labels are passed as a two-column proportion matrix, the
+  # form glmnet supports for non-integer binomial responses.
+  fit_pi <- glmnet::cv.glmnet(
+    x,
+    cbind(1 - pseudo_labels, pseudo_labels),
+    family = "binomial",
+    alpha = alpha,
+    nfolds = nfolds
+  )
   pred_y <- stats::predict(fit_pi, newx = x, s = "lambda.min", type = "response")
   cutoff <- stats::quantile(pred_y[positive_id], qq)
   pred_coef1 <- glmnet::coef.glmnet(fit_pi, s = "lambda.min")

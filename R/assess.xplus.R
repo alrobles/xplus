@@ -44,7 +44,6 @@ assess.xplus <- function(object, newx = NULL, newy, weights = NULL, ...) {
   for (measure in type.measures) {
     teststuff <- do.call(xplus_cv_lognet, list(predmat, y, measure, weights, object$cutoff))
     out <- drop(with(teststuff, apply(cvraw, 2, stats::weighted.mean, w = weights, na.rm = TRUE)))
-    attr(out, "measure") <- measure
     outlist[[measure]] <- out
   }
 
