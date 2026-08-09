@@ -108,8 +108,10 @@ xplus <- function(
     prob_chosen[as.character(sample_id)] <- pmax(prob_chosen[as.character(sample_id)] - (1 / sample_use_time), 0)
 
     fit_id <- c(positive_id, sample_id)
-    # glmnet's binomial fit requires at least two observations per class.
-    if (length(unique(y[fit_id])) < 2 || min(table(y[fit_id])) < 2) {
+    # glmnet's binomial fit requires at least two observations per class in
+    # every cross-validation training split; with fewer than `nfolds`
+    # members a class cannot be spread across all folds.
+    if (length(unique(y[fit_id])) < 2 || min(table(y[fit_id])) < max(2, nfolds)) {
       if (isTRUE(verbose)) message("Stopping: pseudo-labels collapsed to a single class.")
       stop_reason <- "degenerate_labels"
       break
@@ -120,7 +122,7 @@ xplus <- function(
       y = y[fit_id],
       alpha = alpha,
       type.measure = "auc",
-      nfolds = nfolds,
+      foldid = stratified_foldid(y[fit_id], nfolds),
       thresh = 1e-3,
       maxit = 1e3,
       family = "binomial"
@@ -170,19 +172,24 @@ xplus <- function(
 
   # Soft pseudo-labels are passed as a two-column proportion matrix, the
   # form glmnet supports for non-integer binomial responses. glmnet
-  # requires an effective total of at least two observations per class;
-  # when the pseudo-labels leave one class below that, fall back to the
-  # original positive/unlabeled labels for the final fit.
+  # requires at least two effective observations per class in every
+  # cross-validation training split; when the pseudo-labels leave a class
+  # too small for that, fall back to the original positive/unlabeled
+  # labels for the final fit. Folds are stratified on the hard labels so
+  # a small class is never concentrated in a single fold.
   final_labels <- pseudo_labels
-  if (min(sum(final_labels), sum(1 - final_labels)) < 2) {
+  hard_labels <- as.integer(final_labels >= pseudo_label_cutoff)
+  if (min(sum(final_labels), sum(1 - final_labels)) < max(2, nfolds) ||
+      min(table(factor(hard_labels, levels = 0:1))) < max(2, nfolds)) {
     final_labels <- as.numeric(seq_len(n) %in% positive_id)
+    hard_labels <- as.integer(final_labels)
   }
   fit_pi <- glmnet::cv.glmnet(
     x,
     cbind(1 - final_labels, final_labels),
     family = "binomial",
     alpha = alpha,
-    nfolds = nfolds
+    foldid = stratified_foldid(hard_labels, nfolds)
   )
   pred_y <- stats::predict(fit_pi, newx = x, s = "lambda.min", type = "response")
   cutoff <- stats::quantile(pred_y[positive_id], qq)
