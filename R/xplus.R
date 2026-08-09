@@ -108,7 +108,8 @@ xplus <- function(
     prob_chosen[as.character(sample_id)] <- pmax(prob_chosen[as.character(sample_id)] - (1 / sample_use_time), 0)
 
     fit_id <- c(positive_id, sample_id)
-    if (length(unique(y[fit_id])) < 2) {
+    # glmnet's binomial fit requires at least two observations per class.
+    if (length(unique(y[fit_id])) < 2 || min(table(y[fit_id])) < 2) {
       if (isTRUE(verbose)) message("Stopping: pseudo-labels collapsed to a single class.")
       stop_reason <- "degenerate_labels"
       break
@@ -168,10 +169,17 @@ xplus <- function(
   }
 
   # Soft pseudo-labels are passed as a two-column proportion matrix, the
-  # form glmnet supports for non-integer binomial responses.
+  # form glmnet supports for non-integer binomial responses. glmnet
+  # requires an effective total of at least two observations per class;
+  # when the pseudo-labels leave one class below that, fall back to the
+  # original positive/unlabeled labels for the final fit.
+  final_labels <- pseudo_labels
+  if (min(sum(final_labels), sum(1 - final_labels)) < 2) {
+    final_labels <- as.numeric(seq_len(n) %in% positive_id)
+  }
   fit_pi <- glmnet::cv.glmnet(
     x,
-    cbind(1 - pseudo_labels, pseudo_labels),
+    cbind(1 - final_labels, final_labels),
     family = "binomial",
     alpha = alpha,
     nfolds = nfolds
