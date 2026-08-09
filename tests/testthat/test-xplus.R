@@ -367,3 +367,16 @@ test_that("xplus stops cleanly when pseudo-labels collapse to one class", {
   expect_true(fit$stop_reason %in%
                 c("max_iter", "label_stability", "budget_exhausted", "degenerate_labels"))
 })
+
+test_that("xplus survives near-single-class training subsets and final fits", {
+  set.seed(7)
+  # Rare-positive, high-dimensional setting where iterative relabeling can
+  # leave a class with fewer than two observations; used to crash lognet.
+  n <- 300
+  x <- matrix(rnorm(n * 12), ncol = 12)
+  y <- c(rep(1, 4), rep(0, n - 4))
+  x[y == 1, ] <- x[y == 1, ] + 4
+  fit <- xplus(x, y, max_iter = 500, seed = 3)
+  expect_s3_class(fit, "xplus")
+  expect_equal(nrow(fit$pred_y), n)
+})
