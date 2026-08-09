@@ -14,7 +14,9 @@
 #' @param qq Quantile parameter used for cutoff calibration.
 #' @param call Original function call.
 #' @param max_iter Maximum number of iterations configured for fitting.
-#' @param stop_reason Reason fitting stopped: `"max_iter"`, `"label_stability"`, or `"budget_exhausted"`.
+#' @param stop_reason Reason fitting stopped: `"max_iter"`, `"label_stability"`,
+#'   `"budget_exhausted"`, or `"degenerate_labels"` (the pseudo-labels of the
+#'   iterative training subset collapsed to a single class).
 #'
 #' @return An object of class `"xplus"`.
 #' @seealso [validate_xplus()]

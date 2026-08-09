@@ -22,14 +22,15 @@
 predict.xplus <- function(object, ..., newx = NULL, s = "lambda.min", type = "response") {
   type <- match.arg(type, c("response", "link", "class"))
 
-  if (is.numeric(s)) {
-    lambda <- s
-  } else if (is.character(s)) {
-    s <- match.arg(s, c("lambda.min", "lambda.1se"))
-    lambda <- object$xplus[[s]]
-    names(lambda) <- s
-  } else {
-    stop("Invalid form for `s`.", call. = FALSE)
+  resolve_lambda <- function() {
+    if (is.numeric(s)) {
+      s
+    } else if (is.character(s)) {
+      s <- match.arg(s, c("lambda.min", "lambda.1se"))
+      object$xplus[[s]]
+    } else {
+      stop("Invalid form for `s`.", call. = FALSE)
+    }
   }
 
   if (type == "link") {
@@ -38,14 +39,14 @@ predict.xplus <- function(object, ..., newx = NULL, s = "lambda.min", type = "re
       prob <- pmin(pmax(prob, 1e-15), 1 - 1e-15)
       return(log(prob / (1 - prob)))
     } else {
-      return(stats::predict(object$xplus$glmnet.fit, newx, s = lambda, type = "link"))
+      return(stats::predict(object$xplus$glmnet.fit, newx, s = resolve_lambda(), type = "link"))
     }
   }
 
   if (is.null(newx)) {
     prob <- object$pred_y
   } else {
-    prob <- stats::predict(object$xplus$glmnet.fit, newx, s = lambda, type = "response")
+    prob <- stats::predict(object$xplus$glmnet.fit, newx, s = resolve_lambda(), type = "response")
   }
 
   if (type == "response") {

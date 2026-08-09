@@ -14,6 +14,8 @@ new_xplus(
   y = numeric(),
   alpha = numeric(),
   learning_rate = numeric(),
+  pseudo_labels = numeric(),
+  iterative_path = character(),
   qq = numeric(),
   call = character(),
   max_iter = integer(),
@@ -39,13 +41,19 @@ new_xplus(
 
 \item{learning_rate}{Learning rate used during pseudo-label updates.}
 
+\item{pseudo_labels}{Final pseudo-label probabilities.}
+
+\item{iterative_path}{Internal iterative path used for pseudo-label updates.}
+
 \item{qq}{Quantile parameter used for cutoff calibration.}
 
 \item{call}{Original function call.}
 
 \item{max_iter}{Maximum number of iterations configured for fitting.}
 
-\item{stop_reason}{Reason fitting stopped: \code{"max_iter"}, \code{"label_stability"}, or \code{"budget_exhausted"}.}
+\item{stop_reason}{Reason fitting stopped: \code{"max_iter"}, \code{"label_stability"},
+\code{"budget_exhausted"}, or \code{"degenerate_labels"} (the pseudo-labels of the
+iterative training subset collapsed to a single class).}
 }
 \value{
 An object of class \code{"xplus"}.
