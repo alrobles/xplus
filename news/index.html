@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">xplus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,8 +37,12 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.1" id="xplus-101">xplus 1.0.1<a class="anchor" aria-label="anchor" href="#xplus-101"></a></h2>
+<ul><li>Resubmission to CRAN. Fixed NOTEs reported in the incoming pre-test: reworded <code>Description</code> to avoid false-positive spelling flags and removed the private development repository URL from <code>NEWS.md</code> and <code>README.md</code>.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.0" id="xplus-100">xplus 1.0.0<a class="anchor" aria-label="anchor" href="#xplus-100"></a></h2>
-<p>This is a major, breaking upgrade of the PLUS-derived package extensions, not an exact reproduction of the paper or evidence of predictive superiority. Response-scale model scores are not guaranteed to be calibrated probabilities. The package remains <code>xplus</code>; the production repository is <a href="https://github.com/alrobles/xplus" class="external-link uri">https://github.com/alrobles/xplus</a>. Development, audit harnesses and historical baselines live in the development repository <a href="https://github.com/alrobles/xplus-develeopment" class="external-link uri">https://github.com/alrobles/xplus-develeopment</a>.</p>
+<p>This is a major, breaking upgrade of the PLUS-derived package extensions, not an exact reproduction of the paper or evidence of predictive superiority. Response-scale model scores are not guaranteed to be calibrated probabilities. The package remains <code>xplus</code>; the production repository is <a href="https://github.com/alrobles/xplus" class="external-link uri">https://github.com/alrobles/xplus</a>. Development, audit harnesses and historical baselines live in a separate private repository and are not part of this production source tree.</p>
 <div class="section level3">
 <h3 id="breaking-interfaces-and-metrics-1-0-0">Breaking interfaces and metrics<a class="anchor" aria-label="anchor" href="#breaking-interfaces-and-metrics-1-0-0"></a></h3>
 <ul><li>Require R &gt;= 4.1.0 for native-pipe syntax and declare glmnet &gt;= 4.1-8. Verification uses R 4.5.2 / glmnet 5.0; other supported versions have not thereby been verified.</li>
@@ -70,7 +74,7 @@
 <div class="section level3">
 <h3 id="documentation-and-verification-1-0-0">Documentation and verification<a class="anchor" aria-label="anchor" href="#documentation-and-verification-1-0-0"></a></h3>
 <ul><li>Regenerate reference manuals from current roxygen contracts. Installation examples target <code>alrobles/xplus</code> without embedded credentials.</li>
-<li>Diagnostic harnesses, the historical numerical-audit baseline and candidate diagnostics are maintained in the development repository <a href="https://github.com/alrobles/xplus-develeopment" class="external-link uri">https://github.com/alrobles/xplus-develeopment</a>; they are not part of the production source tree.</li>
+<li>Diagnostic harnesses, the historical numerical-audit baseline and candidate diagnostics are maintained in a separate private repository; they are not part of this production source tree.</li>
 <li>Document <code>Rscript -e 'devtools::test(stop_on_failure = TRUE)'</code> and require inspection of FAIL/WARN/SKIP counts. Keep build/check output outside the tracked checkout.</li>
 </ul></div>
 </div>

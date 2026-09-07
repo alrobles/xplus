@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Positive and Unlabeled Learning from Unbalanced Cases and Sparse Structures">
-<meta name="description" content="Provides PLUS-derived extensions for positive and unlabeled (PU) learning from unbalanced cases and sparse structures, based on Zhou et al. (2022) &lt;doi:10.1371/journal.pcbi.1009956&gt;. Iteratively relabels unlabeled observations via penalised logistic regression and pseudo-label updates, then refits a final sparse model. Includes weighted bootstrap sampling, convergence diagnostics, prediction, coefficient extraction, and assessment utilities.">
-<meta property="og:description" content="Provides PLUS-derived extensions for positive and unlabeled (PU) learning from unbalanced cases and sparse structures, based on Zhou et al. (2022) &lt;doi:10.1371/journal.pcbi.1009956&gt;. Iteratively relabels unlabeled observations via penalised logistic regression and pseudo-label updates, then refits a final sparse model. Includes weighted bootstrap sampling, convergence diagnostics, prediction, coefficient extraction, and assessment utilities.">
+<meta name="description" content="Provides PLUS-derived extensions for positive and unlabeled (PU) learning from unbalanced cases and sparse structures, based on the published PLUS algorithm (2022) &lt;doi:10.1371/journal.pcbi.1009956&gt;. Iteratively relabels unlabeled observations via penalised logistic regression and pseudo-label updates, then refits a final sparse model. Includes weighted bootstrap sampling, convergence diagnostics, prediction, coefficient extraction, and assessment utilities.">
+<meta property="og:description" content="Provides PLUS-derived extensions for positive and unlabeled (PU) learning from unbalanced cases and sparse structures, based on the published PLUS algorithm (2022) &lt;doi:10.1371/journal.pcbi.1009956&gt;. Iteratively relabels unlabeled observations via penalised logistic regression and pseudo-label updates, then refits a final sparse model. Includes weighted bootstrap sampling, convergence diagnostics, prediction, coefficient extraction, and assessment utilities.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">xplus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,7 +55,7 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="xplus">xplus<a class="anchor" aria-label="anchor" href="#xplus"></a>
 </h1></div>
-<p><code>xplus</code> provides <strong>PLUS-derived extensions</strong> for Positive and Unlabeled Learning from Unbalanced Cases and Sparse Structures (Zhou et al., 2022). This is the production release <strong>1.0.0</strong>, a major release with breaking numerical and interface contracts. It is not a reproduction of the paper’s experiments and does not establish predictive superiority or guarantee calibrated probabilities.</p>
+<p><code>xplus</code> provides <strong>PLUS-derived extensions</strong> for Positive and Unlabeled Learning from Unbalanced Cases and Sparse Structures (Zhou et al., 2022). This is the production release <strong>1.0.1</strong>, a major release with breaking numerical and interface contracts. It is not a reproduction of the paper’s experiments and does not establish predictive superiority or guarantee calibrated probabilities.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -154,7 +154,7 @@
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="va">repo</span><span class="op">=</span><span class="st">"</span><span class="va">$PWD</span><span class="st">"</span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="va">check_dir</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="fu">mktemp</span> <span class="at">-d</span><span class="va">)</span><span class="st">"</span></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="kw">(</span><span class="bu">cd</span> <span class="st">"</span><span class="va">$check_dir</span><span class="st">"</span> <span class="kw">&amp;&amp;</span> <span class="ex">R</span> CMD build <span class="st">"</span><span class="va">$repo</span><span class="st">"</span> <span class="kw">&amp;&amp;</span> <span class="ex">R</span> CMD check xplus_1.0.0.tar.gz<span class="kw">)</span></span></code></pre></div>
-<p>Audit harnesses, historical baselines and candidate diagnostics are maintained in the development repository <a href="https://github.com/alrobles/xplus-develeopment" class="external-link uri">https://github.com/alrobles/xplus-develeopment</a>; they are not included in the production source tree.</p>
+<p>Audit harnesses, historical baselines and candidate diagnostics are maintained in a separate private repository and are not included in the production source tree.</p>
 </div>
 <div class="section level2">
 <h2 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>

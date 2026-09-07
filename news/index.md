@@ -1,5 +1,12 @@
 # Changelog
 
+## xplus 1.0.1
+
+- Resubmission to CRAN. Fixed NOTEs reported in the incoming pre-test:
+  reworded `Description` to avoid false-positive spelling flags and
+  removed the private development repository URL from `NEWS.md` and
+  `README.md`.
+
 ## xplus 1.0.0
 
 This is a major, breaking upgrade of the PLUS-derived package
@@ -7,8 +14,8 @@ extensions, not an exact reproduction of the paper or evidence of
 predictive superiority. Response-scale model scores are not guaranteed
 to be calibrated probabilities. The package remains `xplus`; the
 production repository is <https://github.com/alrobles/xplus>.
-Development, audit harnesses and historical baselines live in the
-development repository <https://github.com/alrobles/xplus-develeopment>.
+Development, audit harnesses and historical baselines live in a separate
+private repository and are not part of this production source tree.
 
 ### Breaking interfaces and metrics
 
@@ -100,9 +107,8 @@ development repository <https://github.com/alrobles/xplus-develeopment>.
   Installation examples target `alrobles/xplus` without embedded
   credentials.
 - Diagnostic harnesses, the historical numerical-audit baseline and
-  candidate diagnostics are maintained in the development repository
-  <https://github.com/alrobles/xplus-develeopment>; they are not part of
-  the production source tree.
+  candidate diagnostics are maintained in a separate private repository;
+  they are not part of this production source tree.
 - Document `Rscript -e 'devtools::test(stop_on_failure = TRUE)'` and
   require inspection of FAIL/WARN/SKIP counts. Keep build/check output
   outside the tracked checkout.

@@ -20,7 +20,7 @@ three unlabeled observations. `learning_rate` must be in `(0, 1]`.
 ``` r
 
 library(xplus)
-#> Package 'xplus' version 1.0.0
+#> Package 'xplus' version 1.0.1
 #> Type 'citation("xplus")' for citing this R package in publications.
 set.seed(1)
 x <- matrix(rnorm(200 * 10), ncol = 10)
