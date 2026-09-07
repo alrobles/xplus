@@ -32,6 +32,6 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-URL: https://github.com/alrobles/xplus
+URL: https://github.com/alrobles/xplus, https://alrobles.github.io/xplus/
 BugReports: https://github.com/alrobles/xplus/issues
 Config/roxygen2/version: 8.0.0
