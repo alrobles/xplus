@@ -8,7 +8,7 @@ Install the production version from the production repository:
 
 ```r
 # install.packages("remotes")
-remotes::install_github("alrobles/xplus-devel")
+remotes::install_github("alrobles/xplus")
 ```
 
 
