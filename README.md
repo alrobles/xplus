@@ -1,6 +1,6 @@
 # xplus
 
-`xplus` provides **PLUS-derived extensions** for Positive and Unlabeled Learning from Unbalanced Cases and Sparse Structures (Zhou et al., 2022). This is the production release **1.0.0**, a major release with breaking numerical and interface contracts. It is not a reproduction of the paper's experiments and does not establish predictive superiority or guarantee calibrated probabilities.
+`xplus` provides **PLUS-derived extensions** for Positive and Unlabeled Learning from Unbalanced Cases and Sparse Structures (Zhou et al., 2022). This is the production release **1.0.1**, a major release with breaking numerical and interface contracts. It is not a reproduction of the paper's experiments and does not establish predictive superiority or guarantee calibrated probabilities.
 
 ## Installation
 
@@ -95,7 +95,7 @@ check_dir="$(mktemp -d)"
 (cd "$check_dir" && R CMD build "$repo" && R CMD check xplus_1.0.0.tar.gz)
 ```
 
-Audit harnesses, historical baselines and candidate diagnostics are maintained in the development repository <https://github.com/alrobles/xplus-develeopment>; they are not included in the production source tree.
+Audit harnesses, historical baselines and candidate diagnostics are maintained in a separate private repository and are not included in the production source tree.
 
 ## Reference
 

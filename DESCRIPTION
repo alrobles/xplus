@@ -1,16 +1,16 @@
 Package: xplus
 Title: Positive and Unlabeled Learning from Unbalanced Cases and Sparse Structures
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: 
     person("Angel", "Robles", , "a.l.robles.fernandez@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-4674-4270"))
 Description: Provides PLUS-derived extensions for positive and unlabeled (PU)
-    learning from unbalanced cases and sparse structures, based on
-    Zhou et al. (2022) <doi:10.1371/journal.pcbi.1009956>. Iteratively
-    relabels unlabeled observations via penalised logistic regression and
-    pseudo-label updates, then refits a final sparse model. Includes weighted
-    bootstrap sampling, convergence diagnostics, prediction, coefficient
-    extraction, and assessment utilities.
+    learning from unbalanced cases and sparse structures, based on the
+    published PLUS algorithm (2022) <doi:10.1371/journal.pcbi.1009956>.
+    Iteratively relabels unlabeled observations via penalised logistic
+    regression and pseudo-label updates, then refits a final sparse model.
+    Includes weighted bootstrap sampling, convergence diagnostics, prediction,
+    coefficient extraction, and assessment utilities.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
