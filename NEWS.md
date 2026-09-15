@@ -1,3 +1,11 @@
+# xplus 1.0.2
+
+* Resubmission to CRAN. Fixed the reviewer notes from Konstanze Lauseker:
+  removed `\examples` from the unexported internal functions `new_xplus()`
+  and `validate_xplus()`; the package no longer uses `\dontrun{}` anywhere;
+  and `xplus()` no longer reads or writes `.GlobalEnv` directly (the optional
+  `seed` argument uses a plain `set.seed()` call).
+
 # xplus 1.0.1
 
 * Resubmission to CRAN. Fixed NOTEs reported in the incoming pre-test:
@@ -10,9 +18,9 @@ This is a major, breaking upgrade of the PLUS-derived package extensions, not
 an exact reproduction of the paper or evidence of predictive superiority.
 Response-scale model scores are not guaranteed to be calibrated probabilities.
 The package remains `xplus`; the production repository is
-<https://github.com/alrobles/xplus>. Development, audit harnesses and
-historical baselines live in a separate private repository and are not part of
-this production source tree.
+<https://github.com/alrobles/xplus-devel>. Development, audit harnesses and
+historical baselines live in the development repository
+<https://github.com/alrobles/xplus-develeopment>.
 
 ## Breaking interfaces and metrics
 
@@ -84,10 +92,11 @@ this production source tree.
 ## Documentation and verification
 
 * Regenerate reference manuals from current roxygen contracts. Installation
-  examples target `alrobles/xplus` without embedded credentials.
+  examples target `alrobles/xplus-devel` without embedded credentials.
 * Diagnostic harnesses, the historical numerical-audit baseline and candidate
-  diagnostics are maintained in a separate private repository; they are not
-  part of this production source tree.
+  diagnostics are maintained in the development repository
+  <https://github.com/alrobles/xplus-develeopment>; they are not part of the
+  production source tree.
 * Document `Rscript -e 'devtools::test(stop_on_failure = TRUE)'` and require
   inspection of FAIL/WARN/SKIP counts. Keep build/check output outside the
   tracked checkout.
