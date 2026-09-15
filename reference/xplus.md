@@ -78,8 +78,9 @@ xplus(
 
 - seed:
 
-  Optional nonnegative integer seed, isolated from the caller's RNG
-  stream.
+  Integer or `NULL`. Random seed for reproducibility, applied via
+  [`set.seed()`](https://rdrr.io/r/base/Random.html). Default `NULL` (no
+  seed).
 
 - sigmoid_scale, degenerate_threshold:
 

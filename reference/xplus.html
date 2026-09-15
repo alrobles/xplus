@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">xplus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -113,7 +113,7 @@ retain the package's global-update, hard-thresholded enhancement path.</p></dd>
 
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
-<dd><p>Optional nonnegative integer seed, isolated from the caller's RNG stream.</p></dd>
+<dd><p>Integer or <code>NULL</code>. Random seed for reproducibility, applied via <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code>. Default <code>NULL</code> (no seed).</p></dd>
 
 
 <dt id="arg-sigmoid-scale-degenerate-threshold">sigmoid_scale, degenerate_threshold<a class="anchor" aria-label="anchor" href="#arg-sigmoid-scale-degenerate-threshold"></a></dt>
