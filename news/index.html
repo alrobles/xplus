@@ -46,7 +46,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.0" id="xplus-100">xplus 1.0.0<a class="anchor" aria-label="anchor" href="#xplus-100"></a></h2>
-<p>This is a major, breaking upgrade of the PLUS-derived package extensions, not an exact reproduction of the paper or evidence of predictive superiority. Response-scale model scores are not guaranteed to be calibrated probabilities. The package remains <code>xplus</code>; the production repository is <a href="https://github.com/alrobles/xplus-devel" class="external-link uri">https://github.com/alrobles/xplus-devel</a>. Development, audit harnesses and historical baselines live in the development repository <a href="https://github.com/alrobles/xplus-develeopment" class="external-link uri">https://github.com/alrobles/xplus-develeopment</a>.</p>
+<p>This is a major, breaking upgrade of the PLUS-derived package extensions, not an exact reproduction of the paper or evidence of predictive superiority. Response-scale model scores are not guaranteed to be calibrated probabilities. The package remains <code>xplus</code>; the production repository is <a href="https://github.com/alrobles/xplus" class="external-link uri">https://github.com/alrobles/xplus</a>. Development, audit harnesses and historical baselines live in a separate development repository.</p>
 <div class="section level3">
 <h3 id="breaking-interfaces-and-metrics-1-0-0">Breaking interfaces and metrics<a class="anchor" aria-label="anchor" href="#breaking-interfaces-and-metrics-1-0-0"></a></h3>
 <ul><li>Require R &gt;= 4.1.0 for native-pipe syntax and declare glmnet &gt;= 4.1-8. Verification uses R 4.5.2 / glmnet 5.0; other supported versions have not thereby been verified.</li>
@@ -77,14 +77,14 @@
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-and-verification-1-0-0">Documentation and verification<a class="anchor" aria-label="anchor" href="#documentation-and-verification-1-0-0"></a></h3>
-<ul><li>Regenerate reference manuals from current roxygen contracts. Installation examples target <code>alrobles/xplus-devel</code> without embedded credentials.</li>
-<li>Diagnostic harnesses, the historical numerical-audit baseline and candidate diagnostics are maintained in the development repository <a href="https://github.com/alrobles/xplus-develeopment" class="external-link uri">https://github.com/alrobles/xplus-develeopment</a>; they are not part of the production source tree.</li>
+<ul><li>Regenerate reference manuals from current roxygen contracts. Installation examples target <code>alrobles/xplus</code> without embedded credentials.</li>
+<li>Diagnostic harnesses, the historical numerical-audit baseline and candidate diagnostics are maintained in a separate development repository; they are not part of the production source tree.</li>
 <li>Document <code>Rscript -e 'devtools::test(stop_on_failure = TRUE)'</code> and require inspection of FAIL/WARN/SKIP counts. Keep build/check output outside the tracked checkout.</li>
 </ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="xplus-011">xplus 0.1.1<a class="anchor" aria-label="anchor" href="#xplus-011"></a></h2>
-<ul><li>Fixed a crash when the pseudo-labels of the iterative training subset collapse to a single class: fitting now stops cleanly with <code>stop_reason = "degenerate_labels"</code> instead of failing inside <code><a href="https://rdrr.io/pkg/glmnet/man/cv.glmnet.html" class="external-link">glmnet::cv.glmnet()</a></code>.</li>
+<ul><li>Fixed a crash when the pseudo-labels of the iterative training subset collapse to a single class: fitting now stops cleanly with <code>stop_reason = "degenerate_labels"</code> instead of failing inside <code><a href="https://glmnet.stanford.edu/reference/cv.glmnet.html" class="external-link">glmnet::cv.glmnet()</a></code>.</li>
 <li>Sampling probabilities are now clamped at zero when the unlabeled-sampling budget is decremented, and sampling is skipped once the budget is fully exhausted (avoids an uninformative <code><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample()</a></code> error).</li>
 </ul></div>
     <div class="section level2">

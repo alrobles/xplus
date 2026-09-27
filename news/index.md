@@ -28,9 +28,9 @@ This is a major, breaking upgrade of the PLUS-derived package
 extensions, not an exact reproduction of the paper or evidence of
 predictive superiority. Response-scale model scores are not guaranteed
 to be calibrated probabilities. The package remains `xplus`; the
-production repository is <https://github.com/alrobles/xplus-devel>.
-Development, audit harnesses and historical baselines live in the
-development repository <https://github.com/alrobles/xplus-develeopment>.
+production repository is <https://github.com/alrobles/xplus>.
+Development, audit harnesses and historical baselines live in a separate
+development repository.
 
 ### Breaking interfaces and metrics
 
@@ -119,12 +119,11 @@ development repository <https://github.com/alrobles/xplus-develeopment>.
 ### Documentation and verification
 
 - Regenerate reference manuals from current roxygen contracts.
-  Installation examples target `alrobles/xplus-devel` without embedded
+  Installation examples target `alrobles/xplus` without embedded
   credentials.
 - Diagnostic harnesses, the historical numerical-audit baseline and
-  candidate diagnostics are maintained in the development repository
-  <https://github.com/alrobles/xplus-develeopment>; they are not part of
-  the production source tree.
+  candidate diagnostics are maintained in a separate development
+  repository; they are not part of the production source tree.
 - Document `Rscript -e 'devtools::test(stop_on_failure = TRUE)'` and
   require inspection of FAIL/WARN/SKIP counts. Keep build/check output
   outside the tracked checkout.
@@ -134,7 +133,7 @@ development repository <https://github.com/alrobles/xplus-develeopment>.
 - Fixed a crash when the pseudo-labels of the iterative training subset
   collapse to a single class: fitting now stops cleanly with
   `stop_reason = "degenerate_labels"` instead of failing inside
-  [`glmnet::cv.glmnet()`](https://rdrr.io/pkg/glmnet/man/cv.glmnet.html).
+  [`glmnet::cv.glmnet()`](https://glmnet.stanford.edu/reference/cv.glmnet.html).
 - Sampling probabilities are now clamped at zero when the
   unlabeled-sampling budget is decremented, and sampling is skipped once
   the budget is fully exhausted (avoids an uninformative
