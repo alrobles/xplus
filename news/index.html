@@ -37,7 +37,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.0.2" id="xplus-102">xplus 1.0.2<a class="anchor" aria-label="anchor" href="#xplus-102"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.0.2" id="xplus-102">xplus 1.0.2<a class="anchor" aria-label="anchor" href="#xplus-102"></a></h2><p class="text-muted">CRAN release: 2026-09-26</p>
 <ul><li>Resubmission to CRAN. Fixed the reviewer notes from Konstanze Lauseker: removed <code>\examples</code> from the unexported internal functions <code><a href="../reference/new_xplus.html">new_xplus()</a></code> and <code><a href="../reference/validate_xplus.html">validate_xplus()</a></code>; the package no longer uses <code>\dontrun{}</code> anywhere; and <code><a href="../reference/xplus.html">xplus()</a></code> no longer reads or writes <code>.GlobalEnv</code> directly (the optional <code>seed</code> argument uses a plain <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> call).</li>
 </ul></div>
     <div class="section level2">
@@ -84,7 +84,7 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="xplus-011">xplus 0.1.1<a class="anchor" aria-label="anchor" href="#xplus-011"></a></h2>
-<ul><li>Fixed a crash when the pseudo-labels of the iterative training subset collapse to a single class: fitting now stops cleanly with <code>stop_reason = "degenerate_labels"</code> instead of failing inside <code><a href="https://glmnet.stanford.edu/reference/cv.glmnet.html" class="external-link">glmnet::cv.glmnet()</a></code>.</li>
+<ul><li>Fixed a crash when the pseudo-labels of the iterative training subset collapse to a single class: fitting now stops cleanly with <code>stop_reason = "degenerate_labels"</code> instead of failing inside <code><a href="https://rdrr.io/pkg/glmnet/man/cv.glmnet.html" class="external-link">glmnet::cv.glmnet()</a></code>.</li>
 <li>Sampling probabilities are now clamped at zero when the unlabeled-sampling budget is decremented, and sampling is skipped once the budget is fully exhausted (avoids an uninformative <code><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample()</a></code> error).</li>
 </ul></div>
     <div class="section level2">

@@ -43,7 +43,7 @@ new_xplus(
 - fit_xplus:
 
   Fitted
-  [`glmnet::cv.glmnet()`](https://glmnet.stanford.edu/reference/cv.glmnet.html)
+  [`glmnet::cv.glmnet()`](https://rdrr.io/pkg/glmnet/man/cv.glmnet.html)
   object.
 
 - pred_y:
