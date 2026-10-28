@@ -1,3 +1,12 @@
+# xplus 1.1.1
+
+* Seeded functions (`xplus()`, `xplus_elkan_noto()`, `xplus_naive()`,
+  `pu_mask()`, `simulate_pu_data()`) now restore the caller's RNG state on
+  exit instead of clobbering `.Random.seed`.
+* New pkgdown article "Seeing PU learning in two dimensions" visualizing
+  linear and nonlinear PU problems with glmnet and ranger probability
+  surfaces.
+
 # xplus 1.1.0
 
 * New PU baselines `xplus_elkan_noto()` and `xplus_naive()` expressed on the
