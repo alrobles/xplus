@@ -8,16 +8,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/alrobles/xplus/blob/v1.1.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/alrobles/xplus/blob/main/DESCRIPTION)
 
 Robles A (2026). *xplus: Positive and Unlabeled Learning from Unbalanced
-Cases and Sparse Structures*. R package version 1.0.2,
-<https://github.com/alrobles/xplus>.
+Cases and Sparse Structures*. R package version 1.1.0,
+<https://alrobles.github.io/xplus/>.
 
     @Manual{,
       title = {xplus: Positive and Unlabeled Learning from Unbalanced Cases and Sparse Structures},
       author = {Angel Robles},
       year = {2026},
-      note = {R package version 1.0.2},
-      url = {https://github.com/alrobles/xplus},
+      note = {R package version 1.1.0},
+      url = {https://alrobles.github.io/xplus/},
     }

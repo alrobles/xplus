@@ -20,8 +20,6 @@ three unlabeled observations. `learning_rate` must be in `(0, 1]`.
 ``` r
 
 library(xplus)
-#> Package 'xplus' version 1.0.2
-#> Type 'citation("xplus")' for citing this R package in publications.
 set.seed(1)
 x <- matrix(rnorm(200 * 10), ncol = 10)
 y <- c(rep(1, 40), rep(0, 160))
@@ -41,6 +39,7 @@ summary(fit)
 #> CV measure: deviance 
 #> Sampling: bootstrap 
 #> Unlabeled coverage: 0.99375 
+#> Backend: glmnet 
 #> Cutoff: 0.6542115 
 #> lambda.min: 0.008950157 
 #> lambda.1se: 0.03613194 

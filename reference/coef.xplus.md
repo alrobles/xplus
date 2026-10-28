@@ -1,6 +1,9 @@
 # Extract coefficients from an xplus model
 
-Extract coefficients from an xplus model
+Only defined for models fitted with the `"glmnet"` backend; for other
+backends use
+[`get_importance()`](https://alrobles.github.io/xplus/reference/get_importance.md)
+instead.
 
 ## Usage
 

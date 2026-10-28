@@ -53,6 +53,7 @@ print(fit)
 #> Final training target range: 0 to 1 
 #> Final soft targets: 59 
 #> CV measure: deviance 
+#> Backend: glmnet 
 #> Cutoff: 0.4683 
 #> 
 #>      Lambda Index Measure      SE Nonzero

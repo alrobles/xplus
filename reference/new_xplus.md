@@ -34,7 +34,8 @@ new_xplus(
   sampling = NULL,
   min_iter = NULL,
   stability_window = NULL,
-  min_coverage = NULL
+  min_coverage = NULL,
+  backend = NULL
 )
 ```
 
@@ -112,6 +113,12 @@ new_xplus(
   Reason fitting stopped: `"max_iter"`, `"label_stability"`,
   `"budget_exhausted"`, or `"degenerate_labels"` (the pseudo-labels of
   the iterative training subset collapsed to a single class).
+
+- backend:
+
+  [`xplus_backend()`](https://alrobles.github.io/xplus/reference/xplus_backend.md)
+  spec used for the fits; `NULL` denotes a legacy object fitted before
+  backend support, equivalent to `"glmnet"`.
 
 ## Value
 

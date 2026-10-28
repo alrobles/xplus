@@ -10,8 +10,8 @@
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Positive and Unlabeled Learning from Unbalanced Cases and Sparse Structures">
-<meta name="description" content="Provides PLUS-derived extensions for positive and unlabeled (PU) learning from unbalanced cases and sparse structures, based on Zhou et al. (2022) &lt;doi:10.1371/journal.pcbi.1009956&gt;. Iteratively relabels unlabeled observations via penalised logistic regression and pseudo-label updates, then refits a final sparse model. Includes weighted bootstrap sampling, convergence diagnostics, prediction, coefficient extraction, and assessment utilities.">
-<meta property="og:description" content="Provides PLUS-derived extensions for positive and unlabeled (PU) learning from unbalanced cases and sparse structures, based on Zhou et al. (2022) &lt;doi:10.1371/journal.pcbi.1009956&gt;. Iteratively relabels unlabeled observations via penalised logistic regression and pseudo-label updates, then refits a final sparse model. Includes weighted bootstrap sampling, convergence diagnostics, prediction, coefficient extraction, and assessment utilities.">
+<meta name="description" content="Provides PLUS-derived extensions for positive and unlabeled (PU) learning from unbalanced cases and sparse structures, based on Zhou et al. (2022) &lt;doi:10.1371/journal.pcbi.1009956&gt;. Iteratively relabels unlabeled observations via a pluggable learner (penalised logistic regression, random forests, GAM, boosting, or any parsnip model) and pseudo-label updates, then refits a final model with honest out-of-fold predictions. Includes interchangeable fitting backends, PU-valid learner selection, classical PU baselines, tidymodels tuning integration, weighted bootstrap sampling, convergence diagnostics, prediction, coefficient extraction, and assessment utilities.">
+<meta property="og:description" content="Provides PLUS-derived extensions for positive and unlabeled (PU) learning from unbalanced cases and sparse structures, based on Zhou et al. (2022) &lt;doi:10.1371/journal.pcbi.1009956&gt;. Iteratively relabels unlabeled observations via a pluggable learner (penalised logistic regression, random forests, GAM, boosting, or any parsnip model) and pseudo-label updates, then refits a final model with honest out-of-fold predictions. Includes interchangeable fitting backends, PU-valid learner selection, classical PU baselines, tidymodels tuning integration, weighted bootstrap sampling, convergence diagnostics, prediction, coefficient extraction, and assessment utilities.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="index.html">xplus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +34,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/introduction.html">Introduction to xplus</a></li>
+<li><a class="dropdown-item" href="articles/backends.html">Pluggable classification backends</a></li>
+    <li><a class="dropdown-item" href="articles/introduction.html">Introduction to xplus</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -73,7 +74,7 @@
 <h2 id="basic-workflow">Basic workflow<a class="anchor" aria-label="anchor" href="#basic-workflow"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/alrobles/xplus" class="external-link">xplus</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://alrobles.github.io/xplus/">xplus</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">200</span> <span class="op">*</span> <span class="fl">10</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"feature"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>

@@ -24,7 +24,8 @@ predict(object, newx = NULL, s = "lambda.min", type = "response", ...)
 
   Exact penalty name (`"lambda.min"`, `"lambda.1se"`) or finite
   nonnegative numeric lambda vector. Cache-only objects support only
-  `"lambda.min"`.
+  `"lambda.min"`. Only applies to the `"glmnet"` backend; other backends
+  accept only the default `"lambda.min"`, which is ignored.
 
 - type:
 

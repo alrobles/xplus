@@ -23,7 +23,8 @@ xplus(
   min_coverage = 0.9,
   sampling = c("bootstrap", "unique"),
   cv_measure = c("deviance", "auc"),
-  degenerate_threshold = 1e-06
+  degenerate_threshold = 1e-06,
+  backend = "glmnet"
 )
 ```
 
@@ -112,6 +113,14 @@ xplus(
   (`"deviance"` or `"auc"`); deviance is the default for both fitting
   stages.
 
+- backend:
+
+  Learner for the iterative and final fits: one of `"glmnet"`,
+  `"ranger"`, `"gam"`, `"xgboost"`, `"lightgbm"`, or an
+  [`xplus_backend()`](https://alrobles.github.io/xplus/reference/xplus_backend.md)
+  object for custom backends. `alpha` and `cv_measure` only configure
+  the `"glmnet"` backend.
+
 ## Value
 
 An object of class `"xplus"` containing predictions, original and final
@@ -132,7 +141,8 @@ Zhou et al. (2022). doi:10.1371/journal.pcbi.1009956
 
 [`predict.xplus()`](https://alrobles.github.io/xplus/reference/predict.xplus.md),
 [`summary.xplus()`](https://alrobles.github.io/xplus/reference/summary.xplus.md),
-[`assess.xplus()`](https://alrobles.github.io/xplus/reference/assess.md)
+[`assess.xplus()`](https://alrobles.github.io/xplus/reference/assess.md),
+[`xplus_backend()`](https://alrobles.github.io/xplus/reference/xplus_backend.md)
 
 ## Examples
 

@@ -19,7 +19,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">xplus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,7 +32,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/introduction.html">Introduction to xplus</a></li>
+<li><a class="dropdown-item" href="../articles/backends.html">Pluggable classification backends</a></li>
+    <li><a class="dropdown-item" href="../articles/introduction.html">Introduction to xplus</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -58,7 +59,7 @@
       <h1>Introduction to xplus</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/alrobles/xplus/blob/v1.1.0/vignettes/articles/introduction.Rmd" class="external-link"><code>vignettes/articles/introduction.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/alrobles/xplus/blob/main/vignettes/articles/introduction.Rmd" class="external-link"><code>vignettes/articles/introduction.Rmd</code></a></small>
       <div class="d-none name"><code>introduction.Rmd</code></div>
     </div>
 
@@ -86,9 +87,7 @@ three unlabeled observations. <code>learning_rate</code> must be in
 <h2 id="basic-workflow">Basic workflow<a class="anchor" aria-label="anchor" href="#basic-workflow"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/alrobles/xplus" class="external-link">xplus</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Package 'xplus' version 1.0.2</span></span>
-<span><span class="co">#&gt; Type 'citation("xplus")' for citing this R package in publications.</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://alrobles.github.io/xplus/">xplus</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">200</span> <span class="op">*</span> <span class="fl">10</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">40</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">160</span><span class="op">)</span><span class="op">)</span></span>
@@ -108,6 +107,7 @@ three unlabeled observations. <code>learning_rate</code> must be in
 <span><span class="co">#&gt; CV measure: deviance </span></span>
 <span><span class="co">#&gt; Sampling: bootstrap </span></span>
 <span><span class="co">#&gt; Unlabeled coverage: 0.99375 </span></span>
+<span><span class="co">#&gt; Backend: glmnet </span></span>
 <span><span class="co">#&gt; Cutoff: 0.6542115 </span></span>
 <span><span class="co">#&gt; lambda.min: 0.008950157 </span></span>
 <span><span class="co">#&gt; lambda.1se: 0.03613194 </span></span>

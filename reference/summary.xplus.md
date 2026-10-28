@@ -53,6 +53,7 @@ summary(fit)
 #> CV measure: deviance 
 #> Sampling: bootstrap 
 #> Unlabeled coverage: 0.7375 
+#> Backend: glmnet 
 #> Cutoff: 0.4683134 
 #> lambda.min: 0.02089059 
 #> lambda.1se: 0.0925583 
