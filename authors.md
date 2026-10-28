@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/alrobles/xplus/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/alrobles/xplus/blob/v1.1.0/DESCRIPTION)
 
 Robles A (2026). *xplus: Positive and Unlabeled Learning from Unbalanced
 Cases and Sparse Structures*. R package version 1.0.2,
