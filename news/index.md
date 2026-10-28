@@ -1,5 +1,19 @@
 # Changelog
 
+## xplus 1.1.1
+
+- Seeded functions
+  ([`xplus()`](https://alrobles.github.io/xplus/reference/xplus.md),
+  [`xplus_elkan_noto()`](https://alrobles.github.io/xplus/reference/xplus_elkan_noto.md),
+  [`xplus_naive()`](https://alrobles.github.io/xplus/reference/xplus_elkan_noto.md),
+  [`pu_mask()`](https://alrobles.github.io/xplus/reference/pu_mask.md),
+  [`simulate_pu_data()`](https://alrobles.github.io/xplus/reference/simulate_pu_data.md))
+  now restore the caller’s RNG state on exit instead of clobbering
+  `.Random.seed`.
+- New pkgdown article “Seeing PU learning in two dimensions” visualizing
+  linear and nonlinear PU problems with glmnet and ranger probability
+  surfaces.
+
 ## xplus 1.1.0
 
 - New PU baselines
@@ -243,7 +257,7 @@ development repository.
 - Fixed a crash when the pseudo-labels of the iterative training subset
   collapse to a single class: fitting now stops cleanly with
   `stop_reason = "degenerate_labels"` instead of failing inside
-  [`glmnet::cv.glmnet()`](https://rdrr.io/pkg/glmnet/man/cv.glmnet.html).
+  [`glmnet::cv.glmnet()`](https://glmnet.stanford.edu/reference/cv.glmnet.html).
 - Sampling probabilities are now clamped at zero when the
   unlabeled-sampling budget is decremented, and sampling is skipped once
   the budget is fully exhausted (avoids an uninformative

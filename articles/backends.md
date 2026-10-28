@@ -3,7 +3,7 @@
 [`xplus()`](https://alrobles.github.io/xplus/reference/xplus.md)
 historically drove every pseudo-labeling iteration and the final refit
 through
-[`glmnet::cv.glmnet()`](https://rdrr.io/pkg/glmnet/man/cv.glmnet.html).
+[`glmnet::cv.glmnet()`](https://glmnet.stanford.edu/reference/cv.glmnet.html).
 The development version turns that learner into a pluggable slot: any
 model that can fit weighted binary or fractional targets and return
 probabilities can drive the PLUS loop, and the elastic-net fit remains
@@ -18,7 +18,7 @@ constructor to the `backend` argument of
 
 | backend | learner | notes |
 |----|----|----|
-| `"glmnet"` | [`glmnet::cv.glmnet()`](https://rdrr.io/pkg/glmnet/man/cv.glmnet.html) | default; honors `alpha` and `cv_measure`, records the CV measure in `history` |
+| `"glmnet"` | [`glmnet::cv.glmnet()`](https://glmnet.stanford.edu/reference/cv.glmnet.html) | default; honors `alpha` and `cv_measure`, records the CV measure in `history` |
 | `"ranger"` | [`ranger::ranger()`](http://imbs-hl.github.io/ranger/reference/ranger.md) | probability forest for binary targets, regression forest for soft pseudo-labels; OOB `fit_predict` |
 | `"gam"` | [`mgcv::gam()`](https://rdrr.io/pkg/mgcv/man/gam.html) | one smoothing spline per feature; `max_features` guards the dimension cost |
 | `"xgboost"` | [`xgboost::xgb.train()`](https://rdrr.io/pkg/xgboost/man/xgb.train.html) | logistic/regression objectives by target; out-of-fold `fit_predict` |

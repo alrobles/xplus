@@ -2,7 +2,7 @@
 
 The default backend: penalized binomial regression with internal
 cross-validation via
-[`glmnet::cv.glmnet()`](https://rdrr.io/pkg/glmnet/man/cv.glmnet.html),
+[`glmnet::cv.glmnet()`](https://glmnet.stanford.edu/reference/cv.glmnet.html),
 reproducing the historical `xplus` behavior.
 
 ## Usage

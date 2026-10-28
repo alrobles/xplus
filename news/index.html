@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">xplus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,11 @@
       <small>Source: <a href="https://github.com/alrobles/xplus/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.1" id="xplus-111">xplus 1.1.1<a class="anchor" aria-label="anchor" href="#xplus-111"></a></h2>
+<ul><li>Seeded functions (<code><a href="../reference/xplus.html">xplus()</a></code>, <code><a href="../reference/xplus_elkan_noto.html">xplus_elkan_noto()</a></code>, <code><a href="../reference/xplus_elkan_noto.html">xplus_naive()</a></code>, <code><a href="../reference/pu_mask.html">pu_mask()</a></code>, <code><a href="../reference/simulate_pu_data.html">simulate_pu_data()</a></code>) now restore the caller’s RNG state on exit instead of clobbering <code>.Random.seed</code>.</li>
+<li>New pkgdown article “Seeing PU learning in two dimensions” visualizing linear and nonlinear PU problems with glmnet and ranger probability surfaces.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.1.0" id="xplus-110">xplus 1.1.0<a class="anchor" aria-label="anchor" href="#xplus-110"></a></h2>
 <ul><li>New PU baselines <code><a href="../reference/xplus_elkan_noto.html">xplus_elkan_noto()</a></code> and <code><a href="../reference/xplus_elkan_noto.html">xplus_naive()</a></code> expressed on the same backend contract as <code><a href="../reference/xplus.html">xplus()</a></code>, enabling honest head-to-head comparisons: Elkan-Noto rescales P-vs-U probabilities by the estimated labeling propensity (mean or median over labeled positives), and the naive baseline treats all unlabeled instances as negatives. Both return <code>xplus_baseline</code> objects with <code>predict</code> support and a <code>$cutoff</code>.</li>
@@ -104,7 +109,7 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="xplus-011">xplus 0.1.1<a class="anchor" aria-label="anchor" href="#xplus-011"></a></h2>
-<ul><li>Fixed a crash when the pseudo-labels of the iterative training subset collapse to a single class: fitting now stops cleanly with <code>stop_reason = "degenerate_labels"</code> instead of failing inside <code><a href="https://rdrr.io/pkg/glmnet/man/cv.glmnet.html" class="external-link">glmnet::cv.glmnet()</a></code>.</li>
+<ul><li>Fixed a crash when the pseudo-labels of the iterative training subset collapse to a single class: fitting now stops cleanly with <code>stop_reason = "degenerate_labels"</code> instead of failing inside <code><a href="https://glmnet.stanford.edu/reference/cv.glmnet.html" class="external-link">glmnet::cv.glmnet()</a></code>.</li>
 <li>Sampling probabilities are now clamped at zero when the unlabeled-sampling budget is decremented, and sampling is skipped once the budget is fully exhausted (avoids an uninformative <code><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample()</a></code> error).</li>
 </ul></div>
     <div class="section level2">

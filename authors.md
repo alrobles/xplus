@@ -11,13 +11,13 @@ Source:
 [`DESCRIPTION`](https://github.com/alrobles/xplus/blob/main/DESCRIPTION)
 
 Robles A (2026). *xplus: Positive and Unlabeled Learning from Unbalanced
-Cases and Sparse Structures*. R package version 1.1.0,
+Cases and Sparse Structures*. R package version 1.1.1,
 <https://alrobles.github.io/xplus/>.
 
     @Manual{,
       title = {xplus: Positive and Unlabeled Learning from Unbalanced Cases and Sparse Structures},
       author = {Angel Robles},
       year = {2026},
-      note = {R package version 1.1.0},
+      note = {R package version 1.1.1},
       url = {https://alrobles.github.io/xplus/},
     }
