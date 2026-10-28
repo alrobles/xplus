@@ -243,7 +243,7 @@ development repository.
 - Fixed a crash when the pseudo-labels of the iterative training subset
   collapse to a single class: fitting now stops cleanly with
   `stop_reason = "degenerate_labels"` instead of failing inside
-  [`glmnet::cv.glmnet()`](https://glmnet.stanford.edu/reference/cv.glmnet.html).
+  [`glmnet::cv.glmnet()`](https://rdrr.io/pkg/glmnet/man/cv.glmnet.html).
 - Sampling probabilities are now clamped at zero when the
   unlabeled-sampling budget is decremented, and sampling is skipped once
   the budget is fully exhausted (avoids an uninformative

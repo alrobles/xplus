@@ -104,7 +104,7 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="xplus-011">xplus 0.1.1<a class="anchor" aria-label="anchor" href="#xplus-011"></a></h2>
-<ul><li>Fixed a crash when the pseudo-labels of the iterative training subset collapse to a single class: fitting now stops cleanly with <code>stop_reason = "degenerate_labels"</code> instead of failing inside <code><a href="https://glmnet.stanford.edu/reference/cv.glmnet.html" class="external-link">glmnet::cv.glmnet()</a></code>.</li>
+<ul><li>Fixed a crash when the pseudo-labels of the iterative training subset collapse to a single class: fitting now stops cleanly with <code>stop_reason = "degenerate_labels"</code> instead of failing inside <code><a href="https://rdrr.io/pkg/glmnet/man/cv.glmnet.html" class="external-link">glmnet::cv.glmnet()</a></code>.</li>
 <li>Sampling probabilities are now clamped at zero when the unlabeled-sampling budget is decremented, and sampling is skipped once the budget is fully exhausted (avoids an uninformative <code><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample()</a></code> error).</li>
 </ul></div>
     <div class="section level2">

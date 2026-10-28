@@ -81,5 +81,5 @@ and the simulation settings.
 sim <- simulate_pu_data(n = 300, p = 8, boundary = "interaction", seed = 1)
 fit <- xplus(sim$x, sim$y, max_iter = 5)
 auc(sim$z, as.numeric(predict(fit)))
-#> [1] 0.5
+#> [1] 0.6815068
 ```

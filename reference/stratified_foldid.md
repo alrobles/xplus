@@ -5,7 +5,7 @@ are spread as evenly as possible across folds. This prevents a small
 class from being concentrated in a single fold, which would leave a
 cross-validation training split with fewer than the two observations per
 class that
-[`glmnet::glmnet()`](https://glmnet.stanford.edu/reference/glmnet.html)
+[`glmnet::glmnet()`](https://rdrr.io/pkg/glmnet/man/glmnet.html)
 requires for binomial fits.
 
 ## Usage
@@ -28,4 +28,4 @@ stratified_foldid(y, nfolds)
 
 Integer vector of fold assignments in `1:nfolds`, the same length as
 `y`, suitable for the `foldid` argument of
-[`glmnet::cv.glmnet()`](https://glmnet.stanford.edu/reference/cv.glmnet.html).
+[`glmnet::cv.glmnet()`](https://rdrr.io/pkg/glmnet/man/cv.glmnet.html).

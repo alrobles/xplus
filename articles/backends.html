@@ -67,7 +67,7 @@
     
     
 <p><code><a href="../reference/xplus.html">xplus()</a></code> historically drove every pseudo-labeling
-iteration and the final refit through <code><a href="https://glmnet.stanford.edu/reference/cv.glmnet.html" class="external-link">glmnet::cv.glmnet()</a></code>.
+iteration and the final refit through <code><a href="https://rdrr.io/pkg/glmnet/man/cv.glmnet.html" class="external-link">glmnet::cv.glmnet()</a></code>.
 The development version turns that learner into a pluggable slot: any
 model that can fit weighted binary or fractional targets and return
 probabilities can drive the PLUS loop, and the elastic-net fit remains
@@ -93,7 +93,7 @@ constructor to the <code>backend</code> argument of
 <tbody>
 <tr class="odd">
 <td><code>"glmnet"</code></td>
-<td><code><a href="https://glmnet.stanford.edu/reference/cv.glmnet.html" class="external-link">glmnet::cv.glmnet()</a></code></td>
+<td><code><a href="https://rdrr.io/pkg/glmnet/man/cv.glmnet.html" class="external-link">glmnet::cv.glmnet()</a></code></td>
 <td>default; honors <code>alpha</code> and <code>cv_measure</code>,
 records the CV measure in <code>history</code>
 </td>
