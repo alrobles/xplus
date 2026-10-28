@@ -1,0 +1,17 @@
+"learner","score","n_iter","stop_reason","seconds","error","dataset","rep"
+"ranger",0.852390656494545,15,"max_iter",17.215,NA,"spambase",1
+"lightgbm",0.846467845962142,15,"max_iter",2.973,NA,"spambase",1
+"glmnet",0.845485278869917,13,"label_stability",5.133,NA,"spambase",1
+"xgboost",0.807163729176201,15,"max_iter",4.478,NA,"spambase",1
+"glmnet",0.84304101725018,13,"label_stability",5.84800000000001,NA,"spambase",2
+"ranger",0.83578555795627,15,"max_iter",16.988,NA,"spambase",2
+"lightgbm",0.83128526777286,15,"max_iter",3.047,NA,"spambase",2
+"xgboost",0.78476834273808,15,"max_iter",3.595,NA,"spambase",2
+"xgboost",0.838791476269285,15,"max_iter",3.393,NA,"mushroom",1
+"lightgbm",0.833248226676293,15,"max_iter",1.67999999999999,NA,"mushroom",1
+"glmnet",0.81811644706849,11,"label_stability",14.055,NA,"mushroom",1
+"ranger",0.817903496411489,14,"label_stability",18.29,NA,"mushroom",1
+"xgboost",0.842872216394324,15,"max_iter",3.61699999999999,NA,"mushroom",2
+"lightgbm",0.8357792797287,15,"max_iter",1.71699999999998,NA,"mushroom",2
+"glmnet",0.817210355444275,12,"label_stability",14.389,NA,"mushroom",2
+"ranger",0.81560733218759,15,"label_stability",19.641,NA,"mushroom",2

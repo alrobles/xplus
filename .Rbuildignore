@@ -7,3 +7,5 @@
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
 ^docs$
+^inst/benchmarks$
+^vignettes/articles$

@@ -5,3 +5,4 @@
 CRAN-SUBMISSION
 *.Rproj
 docs/
+inst/benchmarks/realdata/data/
